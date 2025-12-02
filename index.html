@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wellness Journal App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #111827;
+      --ink: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #f97316;
+      --accent-soft: rgba(249,115,22,0.15);
+      --border: #1f2933;
+      --danger: #ef4444;
+      --success: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 55%);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-bottom: 4rem;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    header h1 {
+      font-size: 1.25rem;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    header h1 span:first-child {
+      font-weight: 600;
+    }
+
+    header h1 span:last-child {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .date-pill {
+      font-size: 0.85rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.85);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+    }
+
+    .date-pill strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .card {
+      background: rgba(15,23,42,0.95);
+      border-radius: 0.9rem;
+      border: 1px solid var(--border);
+      padding: 0.9rem;
+      box-shadow: 0 18px 45px rgba(15,23,42,0.7);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .card-title span.icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    .card-subtitle {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    textarea {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 0.55rem;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--ink);
+      font-size: 0.85rem;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .inline-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .inline-row > * {
+      flex: 1 1 0;
+      min-width: 130px;
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .chip {
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #020617;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .chip input[type="checkbox"] {
+      accent-color: var(--accent);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.1s ease, background 0.1s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    .section-divider {
+      margin: 0.75rem 0 0.25rem;
+      border-top: 1px dashed rgba(148,163,184,0.3);
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    /* 0–10 BUTTON PAD STYLES */
+
+    .scale-group {
+      margin-bottom: 0.6rem;
+    }
+
+    .scale-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .scale-header strong {
+      font-size: 0.8rem;
+    }
+
+    .scale-header span {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .scale-buttons {
+      display: grid;
+      grid-template-columns: repeat(11, minmax(0, 1fr));
+      gap: 0.25rem;
+    }
+
+    .scale-btn {
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--muted);
+      font-size: 0.75rem;
+      padding: 0.35rem 0;
+      cursor: pointer;
+      transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease,
+        transform 0.05s ease;
+    }
+
+    .scale-btn.selected {
+      background: var(--accent);
+      color: #111827;
+      border-color: #fdba74;
+      font-weight: 600;
+      transform: translateY(-1px);
+    }
+
+    .scale-btn.low.selected {
+      background: rgba(34,197,94,0.85);
+      border-color: rgba(22,163,74,1);
+      color: #022c22;
+    }
+
+    .scale-btn.mid.selected {
+      background: rgba(250,204,21,0.9);
+      border-color: rgba(202,138,4,1);
+      color: #451a03;
+    }
+
+    .scale-btn.high.selected {
+      background: rgba(248,113,113,0.9);
+      border-color: rgba(220,38,38,1);
+      color: #450a0a;
+    }
+
+    .scale-legend {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    footer {
+      position: sticky;
+      bottom: 0.25rem;
+      margin-top: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    footer .btn-primary {
+      flex: 1;
+      justify-content: center;
+    }
+
+    footer .btn-ghost {
+      flex: 0 0 auto;
+    }
+
+    .toast {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 0.75rem;
+      background: rgba(15,23,42,0.98);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      display: none;
+      align-items: center;
+      gap: 0.45rem;
+      z-index: 50;
+    }
+
+    .toast.show {
+      display: inline-flex;
+      animation: fadeToast 3s ease forwards;
+    }
+
+    @keyframes fadeToast {
+      0% { opacity: 0; transform: translateY(4px); }
+      10% { opacity: 1; transform: translateY(0); }
+      80% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(4px); }
+    }
+
+    @media (max-width: 600px) {
+      .scale-buttons {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <header>
+    <h1>
+      <span>Wellness Journal</span>
+      <span>Check in with your mind, body & spirit.</span>
+    </h1>
+    <div class="date-pill" id="dateTimeDisplay">
+      <span>📅</span><strong>—</strong>
+    </div>
+  </header>
+
+  <main>
+    <!-- BIBLE VERSE + AFFIRMATION -->
+    <section class="card" id="scriptureCard">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">📖</span>
+          <span>Start with the Word</span>
+        </div>
+      </div>
+      <p class="card-subtitle">
+        A gentle reminder of God’s presence, promises, grace, faith, and hope.
+      </p>
+      <label for="bibleVerse">Bible Verse</label>
+      <textarea id="bibleVerse" placeholder="Enter or paste today’s verse here..."></textarea>
+
+      <div class="section-divider"></div>
+      <div class="section-label">End of Day – Speak Life</div>
+
+      <label for="affirmation">Daily Affirmation</label>
+      <textarea id="affirmation" placeholder="I am allowed to rest. I am allowed to grow at my own pace..."></textarea>
+    </section>
+
+    <!-- DAILY JOURNAL + GOALS -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">📝</span>
+          <span>Today’s Reflection & Goals</span>
+        </div>
+      </div>
+      <p class="card-subtitle">
+        Capture your present thoughts and set a few gentle, realistic goals.
+      </p>
+
+      <div class="inline-row">
+        <div>
+          <label for="entryDate">Date</label>
+          <input type="text" id="entryDate" readonly />
+        </div>
+        <div>
+          <label for="entryTime">Time</label>
+          <input type="text" id="entryTime" readonly />
+        </div>
+      </div>
+
+      <label for="journalText" style="margin-top:0.4rem;">Present Thoughts / Journal</label>
+      <textarea id="journalText" placeholder="What’s on your mind right now?"></textarea>
+
+      <div class="section-divider"></div>
+      <div class="section-label">Today’s Goals</div>
+      <p class="card-subtitle">
+        Keep them small, kind, and doable. Checked = completed.
+      </p>
+
+      <div class="chips-row" id="goalsList"></div>
+
+      <div style="margin-top:0.5rem;">
+        <label for="newGoal">Add a new goal (optional)</label>
+        <div class="inline-row">
+          <input type="text" id="newGoal" placeholder="Walk 5 minutes, drink water, text a friend..." />
+          <button class="btn btn-ghost" type="button" id="addGoalBtn">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DAILY CHECK-INS: BUTTON PADS 0–10 -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">🧠</span>
+          <span>Depression & Anxiety Check-ins</span>
+        </div>
+      </div>
+      <p class="card-subtitle">
+        Rate your depression and anxiety from 0–10. This is information, not judgment.
+      </p>
+
+      <div class="scale-group">
+        <div class="scale-header">
+          <strong>Morning – Depression</strong>
+          <span>How heavy does it feel starting the day?</span>
+        </div>
+        <div class="scale-buttons" data-input-id="depMorning"></div>
+        <input type="hidden" id="depMorning" />
+        <div class="scale-legend">
+          <span>0 = None</span><span>5 = Moderate</span><span>10 = Highest</span>
+        </div>
+      </div>
+
+      <div class="scale-group">
+        <div class="scale-header">
+          <strong>Morning – Anxiety</strong>
+          <span>How tense or on edge do you feel?</span>
+        </div>
+        <div class="scale-buttons" data-input-id="anxMorning"></div>
+        <input type="hidden" id="anxMorning" />
+        <div class="scale-legend">
+          <span>0 = Calm</span><span>5 = Uneasy</span><span>10 = Panic</span>
+        </div>
+      </div>
+
+      <div class="scale-group">
+        <div class="scale-header">
+          <strong>Afternoon – Depression</strong>
+          <span>Midday mood check.</span>
+        </div>
+        <div class="scale-buttons" data-input-id="depAfternoon"></div>
+        <input type="hidden" id="depAfternoon" />
+        <div class="scale-legend">
+          <span>0 = None</span><span>5 = Moderate</span><span>10 = Highest</span>
+        </div>
+      </div>
+
+      <div class="scale-group">
+        <div class="scale-header">
+          <strong>Afternoon – Anxiety</strong>
+          <span>How is your body feeling now?</span>
+        </div>
+        <div class="scale-buttons" data-input-id="anxAfternoon"></div>
+        <input type="hidden" id="anxAfternoon" />
+        <div class="scale-legend">
+          <span>0 = Calm</span><span>5 = Uneasy</span><span>10 = Panic</span>
+        </div>
+      </div>
+
+      <div class="scale-group">
+        <div class="scale-header">
+          <strong>Evening – Depression</strong>
+          <span>As the day winds down.</span>
+        </div>
+        <div class="scale-buttons" data-input-id="depEvening"></div>
+        <input type="hidden" id="depEvening" />
+        <div class="scale-legend">
+          <span>0 = None</span><span>5 = Moderate</span><span>10 = Highest</span>
+        </div>
+      </div>
+
+      <div class="scale-group">
+        <div class="scale-header">
+          <strong>Evening – Anxiety</strong>
+          <span>How safe does your body feel tonight?</span>
+        </div>
+        <div class="scale-buttons" data-input-id="anxEvening"></div>
+        <input type="hidden" id="anxEvening" />
+        <div class="scale-legend">
+          <span>0 = Calm</span><span>5 = Uneasy</span><span>10 = Panic</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- APPOINTMENTS & RESOURCES -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">📅</span>
+          <span>Today’s Appointments & Contacts</span>
+        </div>
+      </div>
+      <p class="card-subtitle">
+        Track who you saw, what was said, and what happens next.
+      </p>
+
+      <label for="apptTitle">Appointment Title / Purpose</label>
+      <input type="text" id="apptTitle" placeholder="Therapy, PCP visit, lab work, phone call..." />
+
+      <div class="inline-row" style="margin-top:0.4rem;">
+        <div>
+          <label for="apptDateTime">Date & Time</label>
+          <input type="datetime-local" id="apptDateTime" />
+        </div>
+        <div>
+          <label for="apptLocation">Location</label>
+          <input type="text" id="apptLocation" placeholder="Clinic, telehealth, phone, office..." />
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+      <div class="section-label">Who You Spoke With</div>
+
+      <label for="seenBy">Seen By / Talked To</label>
+      <input type="text" id="seenBy" placeholder="Dr. Smith, Nurse Lee, caseworker, etc." />
+
+      <label for="apptNotes" style="margin-top:0.4rem;">Appointment Notes</label>
+      <textarea id="apptNotes" placeholder="Key points, instructions, changes to meds, concerns..."></textarea>
+
+      <div class="section-divider"></div>
+      <div class="section-label">Follow-Up & Referrals</div>
+
+      <label for="referredTo">Referred To (optional)</label>
+      <input type="text" id="referredTo" placeholder="Specialist, program, resource, support group..." />
+
+      <div class="inline-row" style="margin-top:0.4rem;">
+        <div>
+          <label for="followName">Follow-Up Contact Name</label>
+          <input type="text" id="followName" placeholder="Who will contact or see you next?" />
+        </div>
+        <div>
+          <label for="followDateTime">Follow-Up Date & Time</label>
+          <input type="datetime-local" id="followDateTime" />
+        </div>
+      </div>
+
+      <label for="followNotes" style="margin-top:0.4rem;">Follow-Up Notes</label>
+      <textarea id="followNotes" placeholder="What to bring, questions to ask, forms, labs, documents..."></textarea>
+    </section>
+  </main>
+
+  <footer>
+    <button class="btn btn-ghost" type="button" id="clearBtn">Clear</button>
+    <button class="btn btn-primary" type="button" id="saveBtn">Save Today’s Entry</button>
+  </footer>
+
+  <div class="toast" id="toast">
+    <span>✅</span>
+    <span id="toastMsg">Saved.</span>
+  </div>
+</div>
+
+<script>
+  function formatDateTime() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    const timeStr = now.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+
+    document.getElementById("entryDate").value = dateStr;
+    document.getElementById("entryTime").value = timeStr;
+    document.getElementById("dateTimeDisplay").innerHTML =
+      "<span>📅</span><strong>" + dateStr + "</strong><span>• " + timeStr + "</span>";
+  }
+
+  function initGoals() {
+    const defaults = [
+      "Drink water",
+      "Take meds / vitamins",
+      "Move my body gently",
+      "Send a text / connect",
+      "One small kindness to myself"
+    ];
+    const container = document.getElementById("goalsList");
+    container.innerHTML = "";
+    defaults.forEach((text, idx) => {
+      const id = "goal_" + idx;
+      const chip = document.createElement("label");
+      chip.className = "chip";
+      chip.innerHTML =
+        '<input type="checkbox" id="' + id + '"/>' +
+        "<span>" + text + "</span>";
+      container.appendChild(chip);
+    });
+  }
+
+  function addGoalFromInput() {
+    const input = document.getElementById("newGoal");
+    const text = input.value.trim();
+    if (!text) return;
+    const container = document.getElementById("goalsList");
+    const id = "goal_custom_" + Date.now();
+    const chip = document.createElement("label");
+    chip.className = "chip";
+    chip.innerHTML =
+      '<input type="checkbox" id="' + id + '"/>' +
+      "<span>" + text + "</span>";
+    container.appendChild(chip);
+    input.value = "";
+  }
+
+  // 0–10 BUTTON PAD INITIALIZER
+  function initScaleButtons() {
+    const groups = document.querySelectorAll(".scale-buttons");
+    groups.forEach(group => {
+      const inputId = group.getAttribute("data-input-id");
+      group.innerHTML = "";
+      for (let i = 0; i <= 10; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = i.toString();
+        btn.className = "scale-btn";
+        // add range class for color
+        if (i <= 3) btn.classList.add("low");
+        else if (i <= 6) btn.classList.add("mid");
+        else btn.classList.add("high");
+
+        btn.addEventListener("click", () => {
+          const hidden = document.getElementById(inputId);
+          // clear previous selection in this group
+          group.querySelectorAll(".scale-btn").forEach(b =>
+            b.classList.remove("selected")
+          );
+          btn.classList.add("selected");
+          hidden.value = i.toString();
+        });
+        group.appendChild(btn);
+      }
+    });
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    const text = document.getElementById("toastMsg");
+    text.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2800);
+  }
+
+  function clearForm() {
+    document.getElementById("bibleVerse").value = "";
+    document.getElementById("affirmation").value = "";
+    document.getElementById("journalText").value = "";
+    document.getElementById("apptTitle").value = "";
+    document.getElementById("apptDateTime").value = "";
+    document.getElementById("apptLocation").value = "";
+    document.getElementById("seenBy").value = "";
+    document.getElementById("apptNotes").value = "";
+    document.getElementById("referredTo").value = "";
+    document.getElementById("followName").value = "";
+    document.getElementById("followDateTime").value = "";
+    document.getElementById("followNotes").value = "";
+
+    document.querySelectorAll(".chip input[type='checkbox']").forEach(cb => {
+      cb.checked = false;
+    });
+
+    document.querySelectorAll(".scale-btn.selected").forEach(btn => {
+      btn.classList.remove("selected");
+    });
+    document.querySelectorAll(".scale-group input[type='hidden']").forEach(h => {
+      h.value = "";
+    });
+
+    formatDateTime();
+  }
+
+  function saveEntry() {
+    const key = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const data = {
+      dateDisplay: document.getElementById("entryDate").value,
+      timeDisplay: document.getElementById("entryTime").value,
+      bibleVerse: document.getElementById("bibleVerse").value,
+      affirmation: document.getElementById("affirmation").value,
+      journal: document.getElementById("journalText").value,
+      goals: Array.from(
+        document.querySelectorAll(".chip")
+      ).map(chip => ({
+        text: chip.querySelector("span").textContent,
+        done: chip.querySelector("input").checked
+      })),
+      scales: {
+        depMorning: document.getElementById("depMorning").value,
+        anxMorning: document.getElementById("anxMorning").value,
+        depAfternoon: document.getElementById("depAfternoon").value,
+        anxAfternoon: document.getElementById("anxAfternoon").value,
+        depEvening: document.getElementById("depEvening").value,
+        anxEvening: document.getElementById("anxEvening").value
+      },
+      appt: {
+        title: document.getElementById("apptTitle").value,
+        dt: document.getElementById("apptDateTime").value,
+        location: document.getElementById("apptLocation").value,
+        seenBy: document.getElementById("seenBy").value,
+        notes: document.getElementById("apptNotes").value,
+        referredTo: document.getElementById("referredTo").value,
+        followName: document.getElementById("followName").value,
+        followDt: document.getElementById("followDateTime").value,
+        followNotes: document.getElementById("followNotes").value
+      }
+    };
+
+    try {
+      const existing = JSON.parse(localStorage.getItem("wellnessJournal") || "{}");
+      existing[key] = data;
+      localStorage.setItem("wellnessJournal", JSON.stringify(existing));
+      showToast("Today’s entry saved locally on this device.");
+    } catch (e) {
+      console.error(e);
+      showToast("Saved for this session (localStorage unavailable).");
+    }
+  }
+
+  function loadTodayEntryIfExists() {
+    const key = new Date().toISOString().slice(0, 10);
+    try {
+      const existing = JSON.parse(localStorage.getItem("wellnessJournal") || "{}");
+      const data = existing[key];
+      if (!data) return;
+
+      document.getElementById("bibleVerse").value = data.bibleVerse || "";
+      document.getElementById("affirmation").value = data.affirmation || "";
+      document.getElementById("journalText").value = data.journal || "";
+
+      // goals
+      if (data.goals && Array.isArray(data.goals)) {
+        const container = document.getElementById("goalsList");
+        container.innerHTML = "";
+        data.goals.forEach((g, idx) => {
+          const id = "goal_restore_" + idx;
+          const chip = document.createElement("label");
+          chip.className = "chip";
+          chip.innerHTML =
+            '<input type="checkbox" id="' + id + '"' +
+            (g.done ? " checked" : "") +
+            "/>" +
+            "<span>" + g.text + "</span>";
+          container.appendChild(chip);
+        });
+      }
+
+      // scales
+      const scaleMap = {
+        depMorning: "depMorning",
+        anxMorning: "anxMorning",
+        depAfternoon: "depAfternoon",
+        anxAfternoon: "anxAfternoon",
+        depEvening: "depEvening",
+        anxEvening: "anxEvening"
+      };
+      Object.keys(scaleMap).forEach(k => {
+        const hidden = document.getElementById(scaleMap[k]);
+        if (!hidden) return;
+        const val = (data.scales && data.scales[k]) || "";
+        hidden.value = val;
+        if (val !== "") {
+          const group = document.querySelector(
+            '.scale-buttons[data-input-id="' + scaleMap[k] + '"]'
+          );
+          if (!group) return;
+          group
+            .querySelectorAll(".scale-btn")
+            .forEach(btn => {
+              btn.classList.remove("selected");
+              if (btn.textContent === String(val)) {
+                btn.classList.add("selected");
+              }
+            });
+        }
+      });
+
+      // appointment
+      const appt = data.appt || {};
+      document.getElementById("apptTitle").value = appt.title || "";
+      document.getElementById("apptDateTime").value = appt.dt || "";
+      document.getElementById("apptLocation").value = appt.location || "";
+      document.getElementById("seenBy").value = appt.seenBy || "";
+      document.getElementById("apptNotes").value = appt.notes || "";
+      document.getElementById("referredTo").value = appt.referredTo || "";
+      document.getElementById("followName").value = appt.followName || "";
+      document.getElementById("followDateTime").value = appt.followDt || "";
+      document.getElementById("followNotes").value = appt.followNotes || "";
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    formatDateTime();
+    initGoals();
+    initScaleButtons();
+    loadTodayEntryIfExists();
+
+    document.getElementById("addGoalBtn").addEventListener("click", addGoalFromInput);
+    document.getElementById("saveBtn").addEventListener("click", saveEntry);
+    document.getElementById("clearBtn").addEventListener("click", clearForm);
+  });
+</script>
+</body>
+</html>
