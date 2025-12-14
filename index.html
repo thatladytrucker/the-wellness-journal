@@ -2,131 +2,1159 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Wellness Journal (Offline)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0f172a" />
-  <link rel="manifest" href="manifest.json" />
+  <title>Wellness Journal App — Daily Affirmation + Bible Verse</title>
+  <meta name="theme-color" content="#0b1020" />
   <style>
-    :root {
-      --bg: #0b1020;
-      --card: #111827;
-      --ink: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #f97316;
-      --accent-soft: rgba(249,115,22,0.15);
-      --border: #1f2933;
-      --danger: #ef4444;
-      --success: #22c55e;
+    :root{
+      --bg:#0b1020;
+      --card:#111827;
+      --card2:#0f172a;
+      --ink:#e5e7eb;
+      --muted:#9ca3af;
+      --border:#1f2937;
+      --accent:#f97316;
+      --accentSoft:rgba(249,115,22,0.15);
+      --danger:#ef4444;
+      --success:#22c55e;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #111827 0, #020617 55%);
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 15% 10%, rgba(249,115,22,0.18), transparent 60%),
+                  radial-gradient(1000px 500px at 90% 20%, rgba(34,197,94,0.10), transparent 60%),
+                  var(--bg);
+      color:var(--ink);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:18px}
+    header{
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+      padding:14px 14px;border:1px solid var(--border);border-radius:16px;
+      background: linear-gradient(180deg, rgba(17,24,39,0.9), rgba(15,23,42,0.85));
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    header h1{font-size:18px;margin:0;letter-spacing:.2px}
+    header .sub{color:var(--muted);font-size:13px;margin-top:2px}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--border);background:rgba(255,255,255,0.03);
+      font-size:12px;color:var(--muted);
+    }
+    .tabs{
+      display:flex;gap:8px;margin:14px 0 10px;
+      flex-wrap:wrap;
+    }
+    .tabbtn{
+      cursor:pointer;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.03);
+      color:var(--ink);
+      padding:10px 12px;border-radius:12px;font-size:13px;
+    }
+    .tabbtn.active{
+      border-color: rgba(249,115,22,0.7);
+      background: var(--accentSoft);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap:12px;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      border:1px solid var(--border);
+      background: rgba(17,24,39,0.85);
+      border-radius:16px;
+      padding:14px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.22);
+    }
+    .card h2{margin:0 0 8px;font-size:15px}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    button{
+      cursor:pointer;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color:var(--ink);
+      padding:10px 12px;border-radius:12px;font-size:13px;
+    }
+    button.primary{
+      border-color: rgba(249,115,22,0.7);
+      background: rgba(249,115,22,0.12);
+    }
+    button.danger{border-color: rgba(239,68,68,0.6); background: rgba(239,68,68,0.10)}
+    button.good{border-color: rgba(34,197,94,0.6); background: rgba(34,197,94,0.10)}
+    .bigbox{
+      margin-top:10px;
+      background: rgba(15,23,42,0.75);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      line-height:1.5;
+    }
+    .bigbox .label{
+      font-size:12px;color:var(--muted);
+      text-transform:uppercase;letter-spacing:.12em;
+      margin-bottom:6px;
+    }
+    .bigbox .text{font-size:16px}
+    .small{
+      font-size:12px;color:var(--muted);line-height:1.4;
+    }
+    textarea, input[type="text"]{
+      width:100%;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.03);
       color: var(--ink);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 1rem;
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:13px;
+      outline:none;
     }
-    .app-shell { width: 100%; max-width: 900px; margin: 0 auto; padding-bottom: 5rem; }
-    header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem; }
-    header h1 { font-size: 1.25rem; margin: 0; display: flex; flex-direction: column; gap: 0.15rem; }
-    header h1 span:first-child { font-weight: 700; }
-    header h1 span:last-child { font-size: 0.75rem; font-weight: 400; color: var(--muted); }
-    .date-pill {
-      font-size: 0.85rem; padding: 0.35rem 0.75rem; border-radius: 999px;
-      border: 1px solid var(--border); background: rgba(15,23,42,0.85);
-      display: inline-flex; align-items: center; gap: 0.4rem; color: var(--muted);
+    textarea{min-height:160px;resize:vertical}
+    .split{
+      display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;
     }
-    .date-pill strong { color: var(--ink); font-weight: 600; }
-
-    .tabs { display:flex; gap:0.5rem; margin-bottom:0.75rem; flex-wrap: wrap; }
-    .tab {
-      border: 1px solid var(--border);
-      background: rgba(2,6,23,0.7);
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 0.45rem 0.85rem;
-      font-size: 0.8rem;
-      cursor: pointer;
-      display:inline-flex; gap:0.4rem; align-items:center;
+    @media (max-width: 900px){
+      .split{grid-template-columns:1fr}
     }
-    .tab.active {
-      background: var(--accent-soft);
+    .notice{
+      border:1px dashed rgba(249,115,22,0.55);
+      background: rgba(249,115,22,0.08);
+      padding:10px 12px;border-radius:14px;
       color: var(--ink);
-      border-color: rgba(249,115,22,0.35);
-      font-weight: 600;
+      margin-top:10px;
+      font-size:13px;
     }
-
-    main { display: flex; flex-direction: column; gap: 0.75rem; }
-    .card {
-      background: rgba(15,23,42,0.95);
-      border-radius: 0.9rem;
-      border: 1px solid var(--border);
-      padding: 0.9rem;
-      box-shadow: 0 18px 45px rgba(15,23,42,0.7);
+    .listbox{
+      max-height:280px;overflow:auto;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background: rgba(15,23,42,0.55);
+      padding:10px;
     }
-    .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.4rem; gap:0.5rem; }
-    .card-title { display:flex; align-items:center; gap:0.4rem; font-size:0.95rem; font-weight:700; }
-    .card-title span.icon {
-      width: 1.5rem; height: 1.5rem; border-radius: 999px;
-      display: inline-flex; align-items:center; justify-content:center;
-      background: var(--accent-soft); color: var(--accent); font-size: 0.9rem;
+    .item{
+      border:1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      padding:10px 10px;border-radius:12px;margin-bottom:8px;
     }
-    .card-subtitle { font-size:0.75rem; color: var(--muted); margin-bottom:0.5rem; line-height:1.35; }
-
-    label { display:block; font-size:0.8rem; color: var(--muted); margin-bottom:0.2rem; }
-    input[type="text"], input[type="datetime-local"], textarea, select {
-      width:100%; padding:0.5rem 0.6rem; border-radius:0.55rem;
-      border:1px solid var(--border); background:#020617; color:var(--ink); font-size:0.85rem;
+    .item .k{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .item .v{font-size:13px;line-height:1.35}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      font-size:12px;color:var(--muted);
     }
-    textarea { min-height: 80px; resize: vertical; }
-    .inline-row { display:flex; gap:0.5rem; flex-wrap:wrap; }
-    .inline-row > * { flex:1 1 0; min-width: 160px; }
-
-    .chips-row { display:flex; flex-wrap:wrap; gap:0.4rem; }
-    .chip {
-      padding:0.35rem 0.7rem; border-radius:999px; border:1px solid var(--border);
-      background:#020617; display:inline-flex; align-items:center; gap:0.35rem;
-      font-size:0.75rem; color: var(--muted);
+    .footer{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      opacity:.9;
     }
-    .chip input[type="checkbox"] { accent-color: var(--accent); }
+    .hidden{display:none !important}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Wellness Journal App</h1>
+        <div class="sub">Daily Affirmation + Bible Verse (offline-ready HTML)</div>
+      </div>
+      <div class="pill" id="todayPill">Loading…</div>
+    </header>
 
-    .btn {
-      border:none; border-radius:999px; padding:0.45rem 0.9rem; font-size:0.8rem;
-      display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer;
-      transition: transform 0.08s ease, box-shadow 0.1s ease, background 0.1s ease;
-      user-select: none;
+    <div class="tabs">
+      <button class="tabbtn active" data-tab="daily">Daily</button>
+      <button class="tabbtn" data-tab="favorites">Favorites</button>
+      <button class="tabbtn" data-tab="manage">Manage Lists</button>
+      <button class="tabbtn" data-tab="backup">Backup</button>
+    </div>
+
+    <!-- DAILY -->
+    <section id="tab-daily">
+      <div class="grid">
+        <div class="card">
+          <h2>Today’s Affirmation</h2>
+          <div class="muted small">Pulled from your 365-day list (Day-of-Year).</div>
+
+          <div class="bigbox" id="affBox">
+            <div class="label" id="affLabel">Affirmation</div>
+            <div class="text" id="affText">…</div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <button class="primary" id="btnPrevAff">◀ Prev</button>
+            <button class="primary" id="btnNextAff">Next ▶</button>
+            <button id="btnRandomAff">🎲 Random</button>
+            <button class="good" id="btnFavAff">★ Favorite</button>
+            <button id="btnCopyAff">Copy</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Today’s Bible Verse</h2>
+          <div class="muted small">
+            Built-in list is <b>KJV (public domain)</b> and cycles by Day-of-Year.
+            You can replace/add your own verse list in “Manage Lists.”
+          </div>
+
+          <div class="bigbox" id="verseBox">
+            <div class="label" id="verseRef">Verse</div>
+            <div class="text" id="verseText">…</div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <button class="primary" id="btnPrevVerse">◀ Prev</button>
+            <button class="primary" id="btnNextVerse">Next ▶</button>
+            <button id="btnRandomVerse">🎲 Random</button>
+            <button class="good" id="btnFavVerse">★ Favorite</button>
+            <button id="btnCopyVerse">Copy</button>
+          </div>
+
+          <div class="notice">
+            If you paste verses from a modern translation (NIV/ESV/etc.), those are typically copyrighted.
+            For safest reuse, use KJV or verses you have permission to publish.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAVORITES -->
+    <section id="tab-favorites" class="hidden">
+      <div class="grid">
+        <div class="card">
+          <h2>Favorite Affirmations</h2>
+          <div class="muted small">Saved on this device (localStorage).</div>
+          <div class="listbox" id="favAffList"></div>
+          <div class="row" style="margin-top:10px">
+            <button class="danger" id="btnClearFavAff">Clear Favorites</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Favorite Verses</h2>
+          <div class="muted small">Saved on this device (localStorage).</div>
+          <div class="listbox" id="favVerseList"></div>
+          <div class="row" style="margin-top:10px">
+            <button class="danger" id="btnClearFavVerse">Clear Favorites</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MANAGE LISTS -->
+    <section id="tab-manage" class="hidden">
+      <div class="card">
+        <h2>Manage Lists (Affirmations + Verses)</h2>
+        <div class="muted small">
+          Easiest: paste one item per line. Then click “Save Lists.”
+        </div>
+
+        <div class="split">
+          <div>
+            <div class="badge">Affirmations (one per line)</div>
+            <textarea id="affTextarea"></textarea>
+            <div class="row" style="margin-top:10px">
+              <button class="primary" id="btnSaveLists">Save Lists</button>
+              <button id="btnResetAff">Reset Affirmations to Built-in</button>
+            </div>
+            <div class="small muted" id="affCount">…</div>
+          </div>
+
+          <div>
+            <div class="badge">Verses (one per line as “Reference — Text”)</div>
+            <textarea id="verseTextarea"></textarea>
+            <div class="row" style="margin-top:10px">
+              <button class="primary" id="btnSaveLists2">Save Lists</button>
+              <button id="btnResetVerse">Reset Verses to Built-in</button>
+            </div>
+            <div class="small muted" id="verseCount">…</div>
+          </div>
+        </div>
+
+        <div class="notice">
+          Tip: For your Payhip book, you can export your lists from the “Backup” tab and format them in Google Docs.
+        </div>
+      </div>
+    </section>
+
+    <!-- BACKUP -->
+    <section id="tab-backup" class="hidden">
+      <div class="card">
+        <h2>Backup / Restore (JSON)</h2>
+        <div class="muted small">
+          Export your data & lists (favorites + custom lists) to a JSON file you can store in Google Drive.
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button class="primary" id="btnExport">Export JSON</button>
+          <button id="btnImport">Import JSON</button>
+          <input type="file" id="importFile" accept="application/json" class="hidden" />
+          <button class="danger" id="btnFactoryReset">Factory Reset (clears all saved)</button>
+        </div>
+
+        <div class="bigbox" style="margin-top:12px">
+          <div class="label">What gets saved</div>
+          <div class="small">
+            ✅ Custom affirmation list (if you edited it)<br/>
+            ✅ Custom verse list (if you edited it)<br/>
+            ✅ Favorite affirmations & verses<br/>
+            ✅ Your last viewed affirmation/verse index
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">© 2025 — Personal offline tracker. Data stays on this device unless you export it.</div>
+  </div>
+
+<script>
+/* =========================
+   STORAGE KEYS
+========================= */
+const KEY_AFF_LIST = "wj_aff_list_v1";
+const KEY_VERSE_LIST = "wj_verse_list_v1";
+const KEY_FAV_AFF = "wj_fav_aff_v1";
+const KEY_FAV_VERSE = "wj_fav_verse_v1";
+const KEY_IDX_AFF = "wj_idx_aff_v1";
+const KEY_IDX_VERSE = "wj_idx_verse_v1";
+
+/* =========================
+   BUILT-IN AFFIRMATIONS (365)
+   (Your cleaned list)
+========================= */
+const BUILTIN_AFFIRMATIONS = [
+  "I welcome wisdom into my life.",
+  "I seek understanding instead of confusion.",
+  "I receive instruction that helps me live rightly.",
+  "I honor God as the beginning of all wisdom.",
+  "I am teachable and willing to grow.",
+  "I listen when wisdom calls out to me.",
+  "I turn away from people whose choices lead to harm.",
+  "I protect my peace by avoiding traps set by others.",
+  "I value the counsel of trustworthy voices.",
+  "I do not join in violence, chaos, or foolishness.",
+  "I choose patience and prudence.",
+  "I am alert and not easily deceived.",
+  "I practice discernment in every decision.",
+  "I do not ignore warning signs.",
+  "I listen when God corrects me because it keeps me safe.",
+  "I trust that wisdom increases my days and strengthens my path.",
+  "I refuse to let fear guide my decisions.",
+  "I walk away from conversations that pull me off my purpose.",
+  "I honor the lessons taught by the elders before me.",
+  "I guard my steps carefully.",
+  "I am responsible for the choices I make.",
+  "I ask God for clarity when I feel lost.",
+  "I am not tempted by shortcuts or false promises.",
+  "I value peace over popularity.",
+  "I allow wisdom to protect me from danger.",
+  "I am steady, grounded, and secure.",
+  "I do not entertain the voices of the wicked.",
+  "I listen for God’s direction every day.",
+  "I learn from my mistakes and move forward.",
+  "I seek the knowledge that leads to life.",
+  "I stay mindful of the paths I choose.",
+  "I trust that God answers when I call.",
+  "I rest in the safety that comes from living wisely.",
+  "I receive God’s wisdom with an open heart.",
+  "I treasure understanding because it protects me.",
+  "I listen closely for wisdom and insight.",
+  "I seek God’s knowledge the way others seek treasure.",
+  "I understand what is right, just, and fair.",
+  "I walk on paths of righteousness and safety.",
+  "I am protected from people who twist truth or deceive.",
+  "I stay away from choices that lead to darkness or harm.",
+  "I use discretion to guard my steps.",
+  "I stay grounded so I am not pulled into destructive situations.",
+  "I walk in integrity and remain rooted in God’s wisdom.",
+  "I trust in the Lord with all my heart.",
+  "I do not lean on my own understanding.",
+  "I acknowledge God in all my ways, and He guides my path.",
+  "I choose wisdom over fear and confusion.",
+  "I turn away from evil so my body and mind can heal.",
+  "I honor God with what I have and what I earn.",
+  "I am not wise in my own eyes — I am teachable.",
+  "I welcome correction that protects my future.",
+  "I seek wisdom because she brings peace, joy, and long life.",
+  "I guard kindness and truth so they never leave me.",
+  "I keep sound judgment so my steps stay secure.",
+  "I rest in the safety God provides at night and in the daytime.",
+  "I hold on to wisdom because it is life to me.",
+  "I guard my heart because it directs everything I do.",
+  "I stay on the path God has set for me.",
+  "I do not abandon the lessons that protect my future.",
+  "I turn away from evil and anything that pulls me off my path.",
+  "I walk in light, not in confusion or darkness.",
+  "I stay teachable and open to correction.",
+  "I keep my eyes straight ahead and focused on purpose.",
+  "I choose words that bring life and clarity.",
+  "I stay steady and intentional with every step I take.",
+  "I listen closely to wisdom so I can stay protected.",
+  "I am alert to voices and situations that seem sweet but lead to harm.",
+  "I honor my body, my mind, and my future with disciplined choices.",
+  "I turn away from anything that drains my strength or peace.",
+  "I stay far from paths that pull me into regret.",
+  "I value the life and purpose God has given me.",
+  "I refuse to give my energy, time, or joy to destructive people.",
+  "I protect my personal boundaries with confidence.",
+  "I choose actions that support long-term stability and wholeness.",
+  "I walk in wisdom today so I do not look back in sorrow tomorrow.",
+  "I protect myself by making wise agreements and commitments.",
+  "I do not rush into obligations that trap my peace.",
+  "I take responsibility for fixing mistakes quickly.",
+  "I work diligently and prepare for the future.",
+  "I avoid laziness because my purpose needs my attention.",
+  "I stay away from people who stir up conflict or disorder.",
+  "I recognize warning signs and adjust before harm happens.",
+  "I refuse to engage in deceit, manipulation, or destructive behavior.",
+  "I walk with integrity because it brings peace and protection.",
+  "I honor the wisdom passed down from my parents and elders.",
+  "I resist temptation that leads to regret or loss.",
+  "I guard my heart, my body, and my future with God’s wisdom.",
+  "I keep God’s commands close to my heart.",
+  "I protect myself by storing wisdom deep within me.",
+  "I stay alert to voices and situations that try to pull me off my purpose.",
+  "I recognize temptation early and turn away quickly.",
+  "I do not go near places or people that threaten my peace.",
+  "I choose discipline over impulsive decisions.",
+  "I value long-term stability more than momentary pleasure.",
+  "I guard my steps so I don’t wander into danger.",
+  "I use discernment in relationships and connections.",
+  "I let wisdom guide my emotions, thoughts, and actions.",
+  "I stay grounded in truth so I am not led astray.",
+  "I listen when wisdom calls because her voice leads me to life.",
+  "I choose understanding over confusion and chaos.",
+  "I speak truth and reject anything that twists or distorts it.",
+  "I walk in righteousness and fairness.",
+  "I value wisdom more than gold, silver, or anything money can buy.",
+  "I use good judgment in all my decisions.",
+  "I stay aware of the paths that lead to peace.",
+  "I am protected because I love and pursue wisdom.",
+  "I receive instruction that brings honor and stability.",
+  "I stay in alignment with God’s ways, which lead to life.",
+  "I embrace the blessings that come from choosing wisdom daily.",
+  "I find favor with the Lord by listening and obeying His wisdom.",
+  "I accept wisdom’s invitation because it leads to life.",
+  "I walk in understanding, not confusion.",
+  "I welcome correction because it makes me wiser.",
+  "I surround myself with people who value truth.",
+  "I turn away from foolishness that steals my peace.",
+  "I choose the path that leads to growth and stability.",
+  "I fear the Lord, and that gives me wisdom and direction.",
+  "I build my life on choices that bring honor, clarity, and long life.",
+  "I walk in righteousness, and it brings me stability.",
+  "I speak words that give life, not harm.",
+  "I work diligently and trust that God blesses my efforts.",
+  "I choose wisdom over reckless behavior.",
+  "I guard my mouth because my words carry power.",
+  "I act with integrity even when no one is watching.",
+  "I bring joy to others through my choices and my character.",
+  "I avoid foolishness because it steals peace and creates turmoil.",
+  "I live in the safety and peace that wisdom provides.",
+  "I walk in integrity, and integrity protects me.",
+  "I choose honesty, even when it’s hard.",
+  "Humility opens the door for wisdom in my life.",
+  "My words carry power, and I use them to build, not destroy.",
+  "I release pride and make room for clarity.",
+  "I surround myself with wise voices and safe guidance.",
+  "I am trustworthy, and people can rely on my word.",
+  "I guard my heart by guarding my speech.",
+  "My kindness returns to me multiplied.",
+  "I do not carry other people’s chaos or debts.",
+  "I set boundaries that protect my peace and purpose.",
+  "I sow good seeds and I receive good in return.",
+  "I am guided by truth, not by fear or pressure.",
+  "Peace grows in my life when I act with integrity.",
+  "I release negative cycles that no longer serve me.",
+  "I attract favor when I seek what is good.",
+  "I am steady, grounded, and anchored in wisdom.",
+  "I choose generosity over scarcity.",
+  "I let go of gossip, drama, and confusion.",
+  "My honest choices create a safe and stable future.",
+  "I am protected from the traps set by others.",
+  "I am not shaken by wickedness or negativity.",
+  "I use my influence to uplift and strengthen.",
+  "I stay rooted in what is right, even when others are not.",
+  "I trust that consequences work themselves out without my involvement.",
+  "I walk confidently because my heart is aligned with truth.",
+  "I am free from foolish decisions and reckless promises.",
+  "I practice self-control in my reactions and responses.",
+  "I am a light of integrity in every environment I enter.",
+  "I choose what leads to life, peace, and stability every single day.",
+  "I love discipline because it helps me grow wiser.",
+  "I practice integrity because it strengthens my foundation.",
+  "I choose truth and reject anything deceitful.",
+  "I use my words to heal, uplift, and bring clarity.",
+  "I work diligently and honor the gifts God placed in me.",
+  "I guard my heart from anxious thoughts by seeking wisdom.",
+  "I act righteously, knowing it brings favor and stability.",
+  "I stay grounded and calm because God establishes my steps.",
+  "I pursue wisdom that leads to a peaceful, secure life.",
+  "I receive discipline because it protects my future.",
+  "I walk with wise people so I can grow wiser.",
+  "I guard my words because they shape my life.",
+  "I choose steady, honest work over shortcuts and regret.",
+  "I manage my anger so it doesn’t control my decisions.",
+  "I honor my responsibilities and see the blessings of consistency.",
+  "I pursue wisdom because it leads to life and abundance.",
+  "I stay grounded and patient, trusting that good results come with time.",
+  "I build my life with wisdom, not impulsive decisions.",
+  "I stay calm and patient because a peaceful spirit brings clarity.",
+  "I choose understanding over quick reactions.",
+  "I walk uprightly, and God strengthens my steps.",
+  "I turn away from foolishness that leads to trouble.",
+  "I am slow to anger because anger clouds judgment.",
+  "I show kindness because it honors God and protects my heart.",
+  "I stay grounded and steady even when others choose chaos.",
+  "I choose righteousness because it leads to life, stability, and honor.",
+  "I use gentle words that calm and restore, not words that stir anger.",
+  "I seek knowledge before responding.",
+  "I keep my heart open to correction because it helps me grow.",
+  "I live with integrity, knowing God sees my intentions.",
+  "I choose a cheerful heart that brings life to my spirit.",
+  "I avoid pride because humility brings understanding.",
+  "I listen to wise counsel instead of reacting impulsively.",
+  "I stay slow to anger because it leads to peace and clarity.",
+  "I walk in righteousness, which brings joy and favor.",
+  "I choose paths that lead to peace, wisdom, and stability.",
+  "I commit my plans to the Lord, and He establishes my steps.",
+  "I keep my motives pure and honest before God.",
+  "I stay humble because humility brings wisdom and honor.",
+  "I turn away from evil because righteousness protects my life.",
+  "I choose peaceful responses instead of angry reactions.",
+  "I speak with grace and truth, knowing my words carry weight.",
+  "I rely on God’s guidance, not my own understanding.",
+  "I make decisions that reflect integrity and sound judgment.",
+  "I stay patient because God works everything together in His time.",
+  "I pursue wisdom because it is better than wealth.",
+  "I guard my spirit so pride does not lead me into destruction.",
+  "I walk confidently because the Lord directs my steps.",
+  "I choose peace over conflict, even when others choose chaos.",
+  "I stay calm because wisdom grows in stillness.",
+  "I guard my words so they bring clarity and not harm.",
+  "I walk in integrity, which strengthens my life and reputation.",
+  "I am slow to anger because patience protects my spirit.",
+  "I turn away from foolishness and stay grounded in understanding.",
+  "I show love and loyalty because they reflect God’s heart.",
+  "I protect my peace by avoiding unnecessary arguments.",
+  "I listen before responding so I can speak with wisdom.",
+  "I use discernment to stay away from harmful people and situations.",
+  "I keep my heart steady and wise in every season.",
+  "I seek understanding before I speak.",
+  "I guard my words because they carry power and consequence.",
+  "I avoid gossip and conversations that bring division.",
+  "I run to the Lord as my strong tower and place of safety.",
+  "I stay humble because pride leads to destruction.",
+  "I listen carefully so I can answer wisely.",
+  "I choose friends who strengthen my spirit and character.",
+  "I stay patient and avoid reacting out of impulse.",
+  "I speak life, healing, and truth into every situation.",
+  "I use discernment to stay grounded and wise.",
+  "I remain aware that my tongue can build up or tear down — I choose to build.",
+  "I walk in integrity because it protects my life and my name.",
+  "I stay patient because rushing leads to mistakes and regret.",
+  "I choose wisdom over impulsive decisions.",
+  "I receive correction because it guides me toward growth.",
+  "I avoid anger because calm thinking brings clarity.",
+  "I show kindness because the Lord blesses those who care for the poor.",
+  "I use discernment so I won’t be misled.",
+  "I honor God’s plans, knowing they stand firm over my life.",
+  "I am not swayed by false words or careless talk.",
+  "I keep learning so wisdom can guide my path.",
+  "I choose steady, thoughtful living that leads to peace.",
+  "I practice self-control because it strengthens my wisdom and stability.",
+  "I avoid impulsive decisions that lead to regret.",
+  "I walk in integrity, and my integrity guides my steps.",
+  "I listen carefully before responding so my words reflect wisdom.",
+  "I stay away from unnecessary conflict and choose peace.",
+  "I am diligent because steady effort leads to reward.",
+  "I act with honesty and fairness in all my dealings.",
+  "I seek counsel because wise guidance strengthens my decisions.",
+  "I trust the Lord to search my heart and keep me on the right path.",
+  "I remain calm and patient in stressful situations.",
+  "I value righteousness because it brings protection and clarity.",
+  "I trust that the Lord directs my heart and guides my steps.",
+  "I value righteousness and justice because they please God.",
+  "I examine my motives to keep them pure and honorable.",
+  "I choose diligence over excuses because steady effort brings results.",
+  "I guard my mouth so my words create peace, not strife.",
+  "I avoid rushing into conflict because wisdom stays calm.",
+  "I walk humbly, knowing pride leads to downfall.",
+  "I seek wisdom instead of relying on my own strength.",
+  "I stay focused on what leads to life, peace, and stability.",
+  "I honor God with my decisions and my daily actions.",
+  "I trust that true victory comes from the Lord.",
+  "I protect my good name because it is more valuable than riches.",
+  "I walk in humility because humility brings honor and life.",
+  "I choose wise paths and avoid traps that harm my future.",
+  "I train my heart in wisdom so I will not depart from it.",
+  "I stay away from angry, hot-tempered people to protect my peace.",
+  "I handle my finances with honesty and fairness.",
+  "I speak truth and refuse to twist my words to deceive.",
+  "I am diligent in my work because diligence leads to opportunity.",
+  "I defend the vulnerable and honor those God cares for.",
+  "I maintain healthy boundaries to guard my well-being.",
+  "I seek knowledge and instruction so I can walk securely.",
+  "I use wisdom when making choices, especially around temptation.",
+  "I stay aware of influences that try to pull me off my path.",
+  "I guard my heart from envy and comparison.",
+  "I discipline myself because discipline brings freedom.",
+  "I honor the guidance of wise voices in my life.",
+  "I keep my mind clear and avoid anything that clouds my judgment.",
+  "I stay grounded so cravings and impulses don’t control me.",
+  "I focus on what builds my future instead of draining my strength.",
+  "I align my heart with truth, not deception or distraction.",
+  "I invest in wisdom because it brings long-term peace.",
+  "I walk in self-control because it leads to life and stability.",
+  "I do not envy the wicked or desire their paths.",
+  "I build my life with wisdom, understanding, and knowledge.",
+  "I stay strong in adversity because God is my strength.",
+  "I choose wise counsel before making decisions.",
+  "I refuse to participate in evil or injustice.",
+  "I remain calm and steady when facing trouble.",
+  "I stand up for those who cannot defend themselves.",
+  "I keep my heart from discouragement because my hope is in God.",
+  "I learn from correction so I can grow wiser.",
+  "I stay disciplined and avoid wasting my energy.",
+  "I walk in righteousness because it leads to a secure future.",
+  "I use patience because patience brings clarity and peace.",
+  "I choose gentle words that cool anger and open understanding.",
+  "I avoid unnecessary conflict and stay focused on purpose.",
+  "I stay humble because humility brings honor.",
+  "I act with self-control even when my emotions are strong.",
+  "I guard my heart from impulsive reactions.",
+  "I seek wisdom before making important decisions.",
+  "I show kindness generously and without expectation.",
+  "I remain calm in heated situations because calmness is strength.",
+  "I carry myself with dignity and discipline in every environment.",
+  "I maintain healthy boundaries to protect my peace.",
+  "I stay away from foolish behavior that brings unnecessary trouble.",
+  "I refuse to get pulled into arguments that go nowhere.",
+  "I guard my words and choose truth over exaggeration or deceit.",
+  "I stay focused on my purpose instead of distractions.",
+  "I avoid people who stir up chaos and confusion.",
+  "I protect my peace by stepping away from toxic conversations.",
+  "I practice self-control because it strengthens my character.",
+  "I recognize manipulation and do not fall into its traps.",
+  "I choose honesty, clarity, and integrity in all situations.",
+  "I stay grounded and steady, even when others choose foolishness.",
+  "I do not boast about tomorrow; I stay present and grounded in today.",
+  "I welcome honest feedback because it sharpens my character.",
+  "I choose friendships that challenge me to grow wiser and stronger.",
+  "I manage my emotions with wisdom instead of reacting impulsively.",
+  "I guard my heart from envy and comparison.",
+  "I avoid unnecessary conflict and choose peace whenever possible.",
+  "I stay diligent in my responsibilities because diligence brings stability.",
+  "I value loyalty and faithfulness in my relationships.",
+  "I keep my heart aligned with wisdom to avoid foolish decisions.",
+  "I remain steady and trustworthy in all seasons of life.",
+  "I walk in boldness because righteousness makes me confident.",
+  "I refuse to hide from truth — I face it with courage.",
+  "I choose honesty over gain that comes from wrongdoing.",
+  "I stay faithful because faithfulness brings blessings.",
+  "I avoid impulsive decisions and seek wisdom first.",
+  "I do not let fear or anxiety drive my choices.",
+  "I walk in justice and protect those who are vulnerable.",
+  "I confess mistakes quickly so healing and direction can come.",
+  "I trust that God will supply what I need when I live uprightly.",
+  "I stay grounded in wisdom so I won’t be shaken.",
+  "I receive correction with humility because it protects my future.",
+  "I stay calm and self-controlled even when others lose their tempers.",
+  "I refuse to be controlled by fear, anger, or impulse.",
+  "I listen before speaking so my words bring wisdom and peace.",
+  "I walk in justice because it brings stability to my life.",
+  "I avoid people who stir up conflict or encourage chaos.",
+  "I guard my heart from pride because pride leads to downfall.",
+  "I choose integrity in all things, even when no one is watching.",
+  "I trust that following God’s wisdom brings joy and safety.",
+  "I stay steady, grounded, and wise in every situation.",
+  "I stay humble and acknowledge my need for God’s wisdom.",
+  "I protect my words and avoid speaking without understanding.",
+  "I trust in God’s truth because His Word never fails.",
+  "I refuse falsehood and deceit in any form.",
+  "I ask God for what I truly need, not for excess that harms me.",
+  "I remain content with the portion God gives me.",
+  "I use discernment to recognize patterns of foolishness.",
+  "I walk away from prideful or arrogant behavior.",
+  "I stay alert to the lessons hidden in everyday life.",
+  "I choose wisdom because it strengthens and stabilizes me.",
+  "I speak with wisdom, and kindness flows from my words.",
+  "I rise each day with purpose, strength, and dignity.",
+  "I manage my responsibilities with clarity and intention.",
+  "I make decisions that bring honor to my life and those connected to me.",
+  "I stay disciplined because discipline strengthens my future.",
+  "I am clothed in strength, not fear or uncertainty.",
+  "I protect my household and my heart with wisdom.",
+  "I steward my time, energy, and resources responsibly.",
+  "I walk in confidence because God equips me for every season.",
+  "I live in a way that reflects grace, purpose, and resilience."
+];
+
+/* =========================
+   BUILT-IN VERSES (KJV, public domain)
+   (This is a starter set you can expand/rewrite in Manage Lists.)
+========================= */
+const BUILTIN_VERSES = [
+  { ref:"Proverbs 1:7 (KJV)", text:"The fear of the LORD is the beginning of knowledge: but fools despise wisdom and instruction." },
+  { ref:"Proverbs 2:6 (KJV)", text:"For the LORD giveth wisdom: out of his mouth cometh knowledge and understanding." },
+  { ref:"Proverbs 3:5 (KJV)", text:"Trust in the LORD with all thine heart; and lean not unto thine own understanding." },
+  { ref:"Proverbs 3:6 (KJV)", text:"In all thy ways acknowledge him, and he shall direct thy paths." },
+  { ref:"Proverbs 4:23 (KJV)", text:"Keep thy heart with all diligence; for out of it are the issues of life." },
+  { ref:"Proverbs 9:10 (KJV)", text:"The fear of the LORD is the beginning of wisdom: and the knowledge of the holy is understanding." },
+  { ref:"Proverbs 10:12 (KJV)", text:"Hatred stirreth up strifes: but love covereth all sins." },
+  { ref:"Proverbs 11:2 (KJV)", text:"When pride cometh, then cometh shame: but with the lowly is wisdom." },
+  { ref:"Proverbs 12:18 (KJV)", text:"There is that speaketh like the piercings of a sword: but the tongue of the wise is health." },
+  { ref:"Proverbs 13:3 (KJV)", text:"He that keepeth his mouth keepeth his life: but he that openeth wide his lips shall have destruction." },
+  { ref:"Proverbs 14:29 (KJV)", text:"He that is slow to wrath is of great understanding: but he that is hasty of spirit exalteth folly." },
+  { ref:"Proverbs 15:1 (KJV)", text:"A soft answer turneth away wrath: but grievous words stir up anger." },
+  { ref:"Proverbs 16:3 (KJV)", text:"Commit thy works unto the LORD, and thy thoughts shall be established." },
+  { ref:"Proverbs 16:9 (KJV)", text:"A man's heart deviseth his way: but the LORD directeth his steps." },
+  { ref:"Proverbs 17:17 (KJV)", text:"A friend loveth at all times, and a brother is born for adversity." },
+  { ref:"Proverbs 18:10 (KJV)", text:"The name of the LORD is a strong tower: the righteous runneth into it, and is safe." },
+  { ref:"Proverbs 18:21 (KJV)", text:"Death and life are in the power of the tongue: and they that love it shall eat the fruit thereof." },
+  { ref:"Proverbs 19:11 (KJV)", text:"The discretion of a man deferreth his anger; and it is his glory to pass over a transgression." },
+  { ref:"Proverbs 20:22 (KJV)", text:"Say not thou, I will recompense evil; but wait on the LORD, and he shall save thee." },
+  { ref:"Proverbs 21:2 (KJV)", text:"Every way of a man is right in his own eyes: but the LORD pondereth the hearts." },
+  { ref:"Proverbs 21:31 (KJV)", text:"The horse is prepared against the day of battle: but safety is of the LORD." },
+  { ref:"Proverbs 22:1 (KJV)", text:"A good name is rather to be chosen than great riches, and loving favour rather than silver and gold." },
+  { ref:"Proverbs 23:17 (KJV)", text:"Let not thine heart envy sinners: but be thou in the fear of the LORD all the day long." },
+  { ref:"Proverbs 24:10 (KJV)", text:"If thou faint in the day of adversity, thy strength is small." },
+  { ref:"Proverbs 25:28 (KJV)", text:"He that hath no rule over his own spirit is like a city that is broken down, and without walls." },
+  { ref:"Proverbs 26:20 (KJV)", text:"Where no wood is, there the fire goeth out: so where there is no talebearer, the strife ceaseth." },
+  { ref:"Proverbs 27:17 (KJV)", text:"Iron sharpeneth iron; so a man sharpeneth the countenance of his friend." },
+  { ref:"Proverbs 28:1 (KJV)", text:"The wicked flee when no man pursueth: but the righteous are bold as a lion." },
+  { ref:"Proverbs 29:25 (KJV)", text:"The fear of man bringeth a snare: but whoso putteth his trust in the LORD shall be safe." },
+  { ref:"Proverbs 30:5 (KJV)", text:"Every word of God is pure: he is a shield unto them that put their trust in him." },
+  { ref:"Proverbs 31:25 (KJV)", text:"Strength and honour are her clothing; and she shall rejoice in time to come." }
+];
+
+/* =========================
+   HELPERS
+========================= */
+function dayOfYear(date = new Date()){
+  const start = new Date(date.getFullYear(), 0, 0);
+  const diff = (date - start) + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60 * 1000);
+  const oneDay = 1000 * 60 * 60 * 24;
+  return Math.floor(diff / oneDay);
+}
+function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+function safeParseJSON(str, fallback){ try{return JSON.parse(str);}catch(e){return fallback;} }
+function uniqNonEmptyLines(text){
+  const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  const seen = new Set();
+  const out = [];
+  for(const l of lines){
+    const key = l.replace(/\s+/g," ").toLowerCase();
+    if(!seen.has(key)){ seen.add(key); out.push(l); }
+  }
+  return out;
+}
+function formatVerseLinesToObjects(text){
+  // expects "Reference — Text" or "Reference - Text"
+  const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  const out = [];
+  for(const line of lines){
+    const m = line.split(/—|-{1,2}/); // rough split
+    if(m.length >= 2){
+      const ref = m.shift().trim();
+      const textPart = m.join("-").trim();
+      out.push({ref, text:textPart});
+    } else {
+      // if they paste just a verse reference, keep it but blank text
+      out.push({ref: line, text:""});
     }
-    .btn-primary { background: linear-gradient(135deg, #f97316, #fb923c); color:#111827; font-weight:800; }
-    .btn-ghost { background: transparent; color: var(--muted); border: 1px dashed var(--border); }
-    .btn-danger { background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.35); color: #fecaca; }
-    .btn:active { transform: translateY(1px); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+  }
+  return out;
+}
+function verseObjectsToLines(arr){
+  return arr.map(v => `${v.ref} — ${v.text}`.trim()).join("\n");
+}
+function copyToClipboard(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text);
+    return true;
+  }
+  // fallback
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(ta);
+  return true;
+}
 
-    .section-divider { margin:0.75rem 0 0.25rem; border-top:1px dashed rgba(148,163,184,0.3); }
-    .section-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color: var(--muted); margin-bottom:0.25rem; }
+/* =========================
+   LOAD SAVED OR BUILT-IN
+========================= */
+function getAffirmations(){
+  const saved = localStorage.getItem(KEY_AFF_LIST);
+  const list = saved ? safeParseJSON(saved, null) : null;
+  return Array.isArray(list) && list.length ? list : BUILTIN_AFFIRMATIONS.slice();
+}
+function getVerses(){
+  const saved = localStorage.getItem(KEY_VERSE_LIST);
+  const list = saved ? safeParseJSON(saved, null) : null;
+  return Array.isArray(list) && list.length ? list : BUILTIN_VERSES.slice();
+}
+function getFavAff(){ return safeParseJSON(localStorage.getItem(KEY_FAV_AFF) || "[]", []); }
+function getFavVerse(){ return safeParseJSON(localStorage.getItem(KEY_FAV_VERSE) || "[]", []); }
+function setFavAff(arr){ localStorage.setItem(KEY_FAV_AFF, JSON.stringify(arr)); }
+function setFavVerse(arr){ localStorage.setItem(KEY_FAV_VERSE, JSON.stringify(arr)); }
 
-    .scale-group { margin-bottom:0.6rem; }
-    .scale-header { display:flex; justify-content:space-between; align-items:baseline; gap:0.5rem; margin-bottom:0.2rem; }
-    .scale-header strong { font-size:0.8rem; }
-    .scale-header span { font-size:0.7rem; color: var(--muted); }
-    .scale-buttons { display:grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap:0.25rem; }
-    .scale-btn {
-      border-radius:0.5rem; border:1px solid var(--border); background:#020617;
-      color: var(--muted); font-size:0.75rem; padding:0.35rem 0; cursor:pointer;
-      transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease, transform 0.05s ease;
+/* =========================
+   STATE
+========================= */
+let AFFS = getAffirmations();
+let VERSES = getVerses();
+
+let idxAff = parseInt(localStorage.getItem(KEY_IDX_AFF) || "", 10);
+let idxVerse = parseInt(localStorage.getItem(KEY_IDX_VERSE) || "", 10);
+
+const doy = dayOfYear(new Date()); // 1..365/366
+if(Number.isNaN(idxAff)) idxAff = (doy - 1) % Math.max(1, AFFS.length);
+if(Number.isNaN(idxVerse)) idxVerse = (doy - 1) % Math.max(1, VERSES.length);
+
+function saveIdx(){
+  localStorage.setItem(KEY_IDX_AFF, String(idxAff));
+  localStorage.setItem(KEY_IDX_VERSE, String(idxVerse));
+}
+
+/* =========================
+   RENDER
+========================= */
+const el = (id)=>document.getElementById(id);
+
+function renderTodayPill(){
+  const d = new Date();
+  const opts = { weekday:"short", year:"numeric", month:"short", day:"numeric" };
+  el("todayPill").textContent = `${d.toLocaleDateString(undefined, opts)} • Day ${doy}`;
+}
+
+function renderDaily(){
+  AFFS = getAffirmations();
+  VERSES = getVerses();
+
+  idxAff = clamp(idxAff, 0, AFFS.length - 1);
+  idxVerse = clamp(idxVerse, 0, VERSES.length - 1);
+  saveIdx();
+
+  el("affLabel").textContent = `Affirmation (${idxAff + 1} / ${AFFS.length})`;
+  el("affText").textContent = AFFS[idxAff] || "—";
+
+  const v = VERSES[idxVerse] || {ref:"—", text:""};
+  el("verseRef").textContent = `${v.ref} (${idxVerse + 1} / ${VERSES.length})`;
+  el("verseText").textContent = v.text || "—";
+
+  // counts in manage tab
+  el("affCount").textContent = `Current affirmations: ${AFFS.length}`;
+  el("verseCount").textContent = `Current verses: ${VERSES.length}`;
+}
+
+function renderFavorites(){
+  const favA = getFavAff();
+  const favV = getFavVerse();
+
+  el("favAffList").innerHTML = favA.length ? "" : `<div class="muted small">No favorites yet.</div>`;
+  favA.forEach((t, i)=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `<div class="k">Affirmation</div><div class="v">${escapeHtml(t)}</div>
+                     <div class="row" style="margin-top:8px">
+                       <button data-i="${i}" data-type="aff" class="danger btnRemoveFav">Remove</button>
+                       <button data-text="${encodeURIComponent(t)}" class="btnCopyFav">Copy</button>
+                     </div>`;
+    el("favAffList").appendChild(div);
+  });
+
+  el("favVerseList").innerHTML = favV.length ? "" : `<div class="muted small">No favorites yet.</div>`;
+  favV.forEach((obj, i)=>{
+    const line = `${obj.ref} — ${obj.text}`.trim();
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `<div class="k">Verse</div><div class="v">${escapeHtml(line)}</div>
+                     <div class="row" style="margin-top:8px">
+                       <button data-i="${i}" data-type="verse" class="danger btnRemoveFav">Remove</button>
+                       <button data-text="${encodeURIComponent(line)}" class="btnCopyFav">Copy</button>
+                     </div>`;
+    el("favVerseList").appendChild(div);
+  });
+
+  document.querySelectorAll(".btnRemoveFav").forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.getAttribute("data-i"),10);
+      const type = btn.getAttribute("data-type");
+      if(type==="aff"){
+        const a = getFavAff(); a.splice(i,1); setFavAff(a);
+      } else {
+        const v = getFavVerse(); v.splice(i,1); setFavVerse(v);
+      }
+      renderFavorites();
+    };
+  });
+  document.querySelectorAll(".btnCopyFav").forEach(btn=>{
+    btn.onclick = ()=>{
+      const t = decodeURIComponent(btn.getAttribute("data-text")||"");
+      copyToClipboard(t);
+      btn.textContent = "Copied!";
+      setTimeout(()=>btn.textContent="Copy", 900);
+    };
+  });
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;").replaceAll("<","&lt;")
+    .replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+
+/* =========================
+   TAB NAV
+========================= */
+function showTab(name){
+  document.querySelectorAll(".tabbtn").forEach(b=>{
+    b.classList.toggle("active", b.getAttribute("data-tab")===name);
+  });
+  ["daily","favorites","manage","backup"].forEach(t=>{
+    el(`tab-${t}`).classList.toggle("hidden", t!==name);
+  });
+  if(name==="favorites") renderFavorites();
+  if(name==="manage") loadManageTextareas();
+  renderDaily();
+}
+
+document.querySelectorAll(".tabbtn").forEach(btn=>{
+  btn.addEventListener("click", ()=> showTab(btn.getAttribute("data-tab")));
+});
+
+/* =========================
+   DAILY BUTTONS
+========================= */
+el("btnPrevAff").onclick = ()=>{ idxAff = (idxAff - 1 + AFFS.length) % AFFS.length; renderDaily(); };
+el("btnNextAff").onclick = ()=>{ idxAff = (idxAff + 1) % AFFS.length; renderDaily(); };
+el("btnRandomAff").onclick = ()=>{ idxAff = Math.floor(Math.random()*AFFS.length); renderDaily(); };
+el("btnCopyAff").onclick = ()=>{
+  copyToClipboard(AFFS[idxAff] || "");
+  el("btnCopyAff").textContent="Copied!";
+  setTimeout(()=>el("btnCopyAff").textContent="Copy", 900);
+};
+el("btnFavAff").onclick = ()=>{
+  const text = AFFS[idxAff];
+  const fav = getFavAff();
+  const key = (text||"").replace(/\s+/g," ").trim().toLowerCase();
+  if(!text) return;
+  if(!fav.some(x => x.replace(/\s+/g," ").trim().toLowerCase()===key)){
+    fav.unshift(text);
+    setFavAff(fav);
+  }
+  el("btnFavAff").textContent="Saved ★";
+  setTimeout(()=>el("btnFavAff").textContent="★ Favorite", 900);
+};
+
+el("btnPrevVerse").onclick = ()=>{ idxVerse = (idxVerse - 1 + VERSES.length) % VERSES.length; renderDaily(); };
+el("btnNextVerse").onclick = ()=>{ idxVerse = (idxVerse + 1) % VERSES.length; renderDaily(); };
+el("btnRandomVerse").onclick = ()=>{ idxVerse = Math.floor(Math.random()*VERSES.length); renderDaily(); };
+el("btnCopyVerse").onclick = ()=>{
+  const v = VERSES[idxVerse] || {ref:"", text:""};
+  const line = `${v.ref} — ${v.text}`.trim();
+  copyToClipboard(line);
+  el("btnCopyVerse").textContent="Copied!";
+  setTimeout(()=>el("btnCopyVerse").textContent="Copy", 900);
+};
+el("btnFavVerse").onclick = ()=>{
+  const v = VERSES[idxVerse];
+  if(!v) return;
+  const fav = getFavVerse();
+  const key = `${v.ref} — ${v.text}`.replace(/\s+/g," ").trim().toLowerCase();
+  if(!fav.some(x => (`${x.ref} — ${x.text}`).replace(/\s+/g," ").trim().toLowerCase()===key)){
+    fav.unshift({ref:v.ref, text:v.text});
+    setFavVerse(fav);
+  }
+  el("btnFavVerse").textContent="Saved ★";
+  setTimeout(()=>el("btnFavVerse").textContent="★ Favorite", 900);
+};
+
+/* =========================
+   FAVORITES CLEAR
+========================= */
+el("btnClearFavAff").onclick = ()=>{
+  if(confirm("Clear all favorite affirmations?")){
+    setFavAff([]);
+    renderFavorites();
+  }
+};
+el("btnClearFavVerse").onclick = ()=>{
+  if(confirm("Clear all favorite verses?")){
+    setFavVerse([]);
+    renderFavorites();
+  }
+};
+
+/* =========================
+   MANAGE LISTS
+========================= */
+function loadManageTextareas(){
+  const a = getAffirmations();
+  const v = getVerses();
+  el("affTextarea").value = a.join("\n");
+  el("verseTextarea").value = verseObjectsToLines(v);
+  el("affCount").textContent = `Current affirmations: ${a.length}`;
+  el("verseCount").textContent = `Current verses: ${v.length}`;
+}
+
+function saveListsFromManage(){
+  // affirmations: dedupe + keep order
+  const affLines = uniqNonEmptyLines(el("affTextarea").value);
+  // verses: parse objects + remove empties + dedupe by ref+text
+  const verseObjsRaw = formatVerseLinesToObjects(el("verseTextarea").value)
+    .filter(v => (v.ref || "").trim().length);
+
+  const seen = new Set();
+  const verseObjs = [];
+  for(const v of verseObjsRaw){
+    const key = `${v.ref}—${v.text}`.replace(/\s+/g," ").trim().toLowerCase();
+    if(!seen.has(key)){ seen.add(key); verseObjs.push({ref:v.ref.trim(), text:(v.text||"").trim()}); }
+  }
+
+  if(affLines.length < 1){
+    alert("Affirmations list is empty. Paste at least 1 line.");
+    return;
+  }
+  if(verseObjs.length < 1){
+    alert("Verse list is empty. Paste at least 1 line.");
+    return;
+  }
+
+  localStorage.setItem(KEY_AFF_LIST, JSON.stringify(affLines));
+  localStorage.setItem(KEY_VERSE_LIST, JSON.stringify(verseObjs));
+
+  // reload state
+  AFFS = getAffirmations();
+  VERSES = getVerses();
+  idxAff = clamp(idxAff, 0, AFFS.length-1);
+  idxVerse = clamp(idxVerse, 0, VERSES.length-1);
+  saveIdx();
+  renderDaily();
+  loadManageTextareas();
+  alert("Saved.");
+}
+
+el("btnSaveLists").onclick = saveListsFromManage;
+el("btnSaveLists2").onclick = saveListsFromManage;
+
+el("btnResetAff").onclick = ()=>{
+  if(confirm("Reset affirmations to the built-in 365 list?")){
+    localStorage.removeItem(KEY_AFF_LIST);
+    AFFS = getAffirmations();
+    idxAff = (dayOfYear(new Date()) - 1) % AFFS.length;
+    saveIdx();
+    loadManageTextareas();
+    renderDaily();
+  }
+};
+el("btnResetVerse").onclick = ()=>{
+  if(confirm("Reset verses to the built-in KJV starter list?")){
+    localStorage.removeItem(KEY_VERSE_LIST);
+    VERSES = getVerses();
+    idxVerse = (dayOfYear(new Date()) - 1) % VERSES.length;
+    saveIdx();
+    loadManageTextareas();
+    renderDaily();
+  }
+};
+
+/* =========================
+   BACKUP / RESTORE
+========================= */
+el("btnExport").onclick = ()=>{
+  const payload = {
+    version: "wj_backup_v1",
+    exportedAt: new Date().toISOString(),
+    affirmationList: getAffirmations(),
+    verseList: getVerses(),
+    favoriteAffirmations: getFavAff(),
+    favoriteVerses: getFavVerse(),
+    idxAff: idxAff,
+    idxVerse: idxVerse
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "wellness-journal-backup.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+};
+
+el("btnImport").onclick = ()=> el("importFile").click();
+
+el("importFile").addEventListener("change", async (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const text = await file.text();
+  const data = safeParseJSON(text, null);
+  if(!data || data.version !== "wj_backup_v1"){
+    alert("That JSON doesn't look like a Wellness Journal backup file.");
+    return;
+  }
+  try{
+    if(Array.isArray(data.affirmationList) && data.affirmationList.length){
+      localStorage.setItem(KEY_AFF_LIST, JSON.stringify(data.affirmationList));
     }
-    .scale-btn.selected { background: var(--accent); color:#111827; border-color:#fdba74; font-weight:800; transform: translateY(-1px); }
-    .scale-btn.low.selected { background: rgba(34,197,94,0.85); border-color: rgba(22,163,74,1); color:#022c22; }
-    .scale-btn.mid.selected { background: rgba(250,204,21,0.9); border-color: rgba(202,138,4,1); color:#451a03; }
-    .scale-btn.high.selected { background: rgba(248,113,113,0.9); border-color: rgba(220,38,38,1); color:#450a0a; }
-    .scale-legend { display:flex; justify-content:space-between; font-size:0.7rem; color: var(--muted); margin-top:0.2rem; }
+    if(Array.isArray(data.verseList) && data.verseList.length){
+      localStorage.setItem(KEY_VERSE_LIST, JSON.stringify(data.verseList));
+    }
+    if(Array.isArray(data.favoriteAffirmations)){
+      setFavAff(data.favoriteAffirmations);
+    }
+    if(Array.isArray(data.favoriteVerses)){
+      setFavVerse(data.favoriteVerses);
+    }
+    if(Number.isFinite(data.idxAff)) localStorage.setItem(KEY_IDX_AFF, String(data.idxAff));
+    if(Number.isFinite(data.idxVerse)) localStorage.setItem(KEY_IDX_VERSE, String(data.idxVerse));
+    // refresh
+    AFFS = getAffirmations();
+    VERSES = getVerses();
+    idxAff = parseInt(localStorage.getItem(KEY_IDX_AFF)||"0",10);
+    idxVerse = parseInt(localStorage.getItem(KEY_IDX_VERSE)||"0",10);
+    renderDaily();
+    alert("Imported.");
+  } catch(err){
+    alert("Import failed.");
+  } finally {
+    e.target.value = "";
+  }
+});
 
-    .muted { color: var(--muted); font-size: 0.8rem; }
-    .row-actions { display:flex; gap:0.5rem; flex-wrap:wrap; }
-    .divider { height:1px; background: rgba(148,163,184,0.18); margin:0.75rem 0; }
+el("btnFactoryReset").onclick = ()=>{
+  if(!confirm("Factory reset will delete ALL saved data for this app on this device. Continue?")) return;
+  [
+    KEY_AFF_LIST, KEY_VERSE_LIST, KEY_FAV_AFF, KEY_FAV_VERSE, KEY_IDX_AFF, KEY_IDX_VERSE
+  ].forEach(k=>localStorage.removeItem(k));
+  AFFS = getAffirmations();
+  VERSES = getVerses();
+  idxAff = (dayOfYear(new Date()) - 1) % AFFS.length;
+  idxVerse = (dayOfYear(new Date()) - 1) % VERSES.length;
+  saveIdx();
+  renderDaily();
+  alert("Reset complete.");
+};
 
-    .history-list { display:flex; flex-direction:column; gap:0.45rem; }
-    .history-item {
-      display:f
+/* =========================
+   INIT
+========================= */
+renderTodayPill();
+renderDaily();
+</script>
+</body>
+</html>
