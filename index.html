@@ -1,336 +1,631 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wellness Journal App — Daily Affirmation + Bible Verse</title>
-  <meta name="theme-color" content="#0b1020" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wellness Journal (KJV + Proverbs Affirmations)</title>
+  <meta name="theme-color" content="#ffffff" />
   <style>
     :root{
-      --bg:#0b1020;
-      --card:#111827;
-      --card2:#0f172a;
-      --ink:#e5e7eb;
-      --muted:#9ca3af;
-      --border:#1f2937;
-      --accent:#f97316;
-      --accentSoft:rgba(249,115,22,0.15);
-      --danger:#ef4444;
-      --success:#22c55e;
+      --bg:#ffffff;
+      --card:#ffffff;
+      --ink:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --soft:#f9fafb;
+      --accent:#2563eb;
+      --accent2:#16a34a;
+      --danger:#dc2626;
+      --warn:#d97706;
+      --shadow: 0 8px 24px rgba(17,24,39,.06);
+      --radius: 16px;
+      --pad: 14px;
+      --max: 980px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
-    *{box-sizing:border-box}
+
+    *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 600px at 15% 10%, rgba(249,115,22,0.18), transparent 60%),
-                  radial-gradient(1000px 500px at 90% 20%, rgba(34,197,94,0.10), transparent 60%),
-                  var(--bg);
-      color:var(--ink);
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.35;
     }
-    .wrap{max-width:980px;margin:0 auto;padding:18px}
     header{
-      display:flex;gap:12px;align-items:center;justify-content:space-between;
-      padding:14px 14px;border:1px solid var(--border);border-radius:16px;
-      background: linear-gradient(180deg, rgba(17,24,39,0.9), rgba(15,23,42,0.85));
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
     }
-    header h1{font-size:18px;margin:0;letter-spacing:.2px}
-    header .sub{color:var(--muted);font-size:13px;margin-top:2px}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
-      border:1px solid var(--border);background:rgba(255,255,255,0.03);
-      font-size:12px;color:var(--muted);
-    }
-    .tabs{
-      display:flex;gap:8px;margin:14px 0 10px;
+    .wrap{ max-width: var(--max); margin: 0 auto; padding: 14px 14px 32px; }
+    .topbar{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
       flex-wrap:wrap;
     }
-    .tabbtn{
-      cursor:pointer;
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width: 220px;
+    }
+    .brand h1{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .brand .meta{
+      color: var(--muted);
+      font-size: 13px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .pill{
+      font-size: 12px;
       border:1px solid var(--border);
-      background:rgba(255,255,255,0.03);
-      color:var(--ink);
-      padding:10px 12px;border-radius:12px;font-size:13px;
+      background: var(--soft);
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: var(--muted);
     }
-    .tabbtn.active{
-      border-color: rgba(249,115,22,0.7);
-      background: var(--accentSoft);
+
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
     }
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap:12px;
+    .controls label{
+      font-size: 12px;
+      color: var(--muted);
     }
-    @media (max-width: 900px){
-      .grid{grid-template-columns:1fr}
-    }
-    .card{
+    input[type="date"], input[type="datetime-local"], input[type="text"], textarea{
+      font: inherit;
       border:1px solid var(--border);
-      background: rgba(17,24,39,0.85);
-      border-radius:16px;
-      padding:14px;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.22);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fff;
+      outline: none;
     }
-    .card h2{margin:0 0 8px;font-size:15px}
-    .muted{color:var(--muted)}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    input[type="date"]{ padding: 8px 10px; }
+    textarea{ width:100%; min-height: 120px; resize: vertical; }
     button{
-      cursor:pointer;
+      font: inherit;
       border:1px solid var(--border);
-      background: rgba(255,255,255,0.04);
-      color:var(--ink);
-      padding:10px 12px;border-radius:12px;font-size:13px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor:pointer;
+      box-shadow: none;
     }
     button.primary{
-      border-color: rgba(249,115,22,0.7);
-      background: rgba(249,115,22,0.12);
+      background: var(--accent);
+      color:#fff;
+      border-color: var(--accent);
     }
-    button.danger{border-color: rgba(239,68,68,0.6); background: rgba(239,68,68,0.10)}
-    button.good{border-color: rgba(34,197,94,0.6); background: rgba(34,197,94,0.10)}
-    .bigbox{
-      margin-top:10px;
-      background: rgba(15,23,42,0.75);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
-      line-height:1.5;
+    button.good{
+      background: var(--accent2);
+      color:#fff;
+      border-color: var(--accent2);
     }
-    .bigbox .label{
-      font-size:12px;color:var(--muted);
-      text-transform:uppercase;letter-spacing:.12em;
-      margin-bottom:6px;
+    button.danger{
+      background: #fff;
+      color: var(--danger);
+      border-color: rgba(220,38,38,.3);
     }
-    .bigbox .text{font-size:16px}
-    .small{
-      font-size:12px;color:var(--muted);line-height:1.4;
+    button:active{ transform: translateY(1px); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 14px;
     }
-    textarea, input[type="text"]{
-      width:100%;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-      color: var(--ink);
-      border-radius:12px;
-      padding:10px 12px;
-      font-size:13px;
-      outline:none;
+    @media (min-width: 960px){
+      .grid.two{ grid-template-columns: 1fr 1fr; }
     }
-    textarea{min-height:160px;resize:vertical}
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: var(--pad);
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size: 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .card h2 .hint{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: normal;
+    }
+    .sub{
+      color: var(--muted);
+      font-size: 13px;
+      margin: 2px 0 10px;
+    }
+    .verseRef{
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .verseText{
+      font-size: 15px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--soft);
+      white-space: pre-wrap;
+    }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .row > *{ flex: 1 1 auto; }
+    .row.tight > *{ flex: 0 1 auto; }
+
     .split{
-      display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
     }
-    @media (max-width: 900px){
-      .split{grid-template-columns:1fr}
+    @media (min-width: 720px){
+      .split{ grid-template-columns: 1fr 1fr; }
     }
-    .notice{
-      border:1px dashed rgba(249,115,22,0.55);
-      background: rgba(249,115,22,0.08);
-      padding:10px 12px;border-radius:14px;
-      color: var(--ink);
-      margin-top:10px;
-      font-size:13px;
-    }
-    .listbox{
-      max-height:280px;overflow:auto;
-      border:1px solid var(--border);
-      border-radius:12px;
-      background: rgba(15,23,42,0.55);
-      padding:10px;
+
+    .list{
+      margin-top: 10px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
     }
     .item{
-      border:1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.02);
-      padding:10px 10px;border-radius:12px;margin-bottom:8px;
+      border:1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fff;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
     }
-    .item .k{font-size:12px;color:var(--muted);margin-bottom:6px}
-    .item .v{font-size:13px;line-height:1.35}
-    .badge{
-      display:inline-flex;align-items:center;gap:6px;
-      padding:6px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.03);
-      font-size:12px;color:var(--muted);
+    .item .left{ flex: 1 1 auto; min-width: 0; }
+    .item .meta{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
     }
-    .footer{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:12px;
+    .item .actions{
+      display:flex;
+      gap:8px;
+      flex: 0 0 auto;
+    }
+
+    .muted{ color: var(--muted); }
+    .small{ font-size: 12px; }
+    .hr{ height: 1px; background: var(--border); margin: 12px 0; }
+
+    /* 1–10 selector buttons */
+    .scale{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 6px;
+      align-items:center;
+      margin-top: 6px;
+    }
+    .numBtn{
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: #fff;
+      user-select:none;
+    }
+    .numBtn.sel{
+      border-color: var(--accent);
+      outline: 2px solid rgba(37,99,235,.15);
+      background: rgba(37,99,235,.06);
+    }
+
+    .toast{
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(17,24,39,.92);
+      color:#fff;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .2s ease;
+      max-width: min(700px, calc(100vw - 24px));
       text-align:center;
-      opacity:.9;
     }
-    .hidden{display:none !important}
+    .toast.show{ opacity: 1; }
+
+    .footerRow{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      margin-top: 14px;
+    }
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
   </style>
 </head>
+
 <body>
+<header>
   <div class="wrap">
-    <header>
-      <div>
-        <h1>Wellness Journal App</h1>
-        <div class="sub">Daily Affirmation + Bible Verse (offline-ready HTML)</div>
+    <div class="topbar">
+      <div class="brand">
+        <h1>Wellness Journal</h1>
+        <div class="meta">
+          <span class="pill" id="liveDate">—</span>
+          <span class="pill" id="liveTime">—</span>
+          <span class="pill" id="saveStatus">Saved</span>
+        </div>
       </div>
-      <div class="pill" id="todayPill">Loading…</div>
-    </header>
 
-    <div class="tabs">
-      <button class="tabbtn active" data-tab="daily">Daily</button>
-      <button class="tabbtn" data-tab="favorites">Favorites</button>
-      <button class="tabbtn" data-tab="manage">Manage Lists</button>
-      <button class="tabbtn" data-tab="backup">Backup</button>
+      <div class="controls">
+        <div class="row tight">
+          <label for="viewDate">View date</label>
+          <input id="viewDate" type="date" />
+          <button id="btnToday" title="Jump back to today">Today</button>
+        </div>
+        <button class="primary" id="btnSaveAll">Save</button>
+      </div>
     </div>
-
-    <!-- DAILY -->
-    <section id="tab-daily">
-      <div class="grid">
-        <div class="card">
-          <h2>Today’s Affirmation</h2>
-          <div class="muted small">Pulled from your 365-day list (Day-of-Year).</div>
-
-          <div class="bigbox" id="affBox">
-            <div class="label" id="affLabel">Affirmation</div>
-            <div class="text" id="affText">…</div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <button class="primary" id="btnPrevAff">◀ Prev</button>
-            <button class="primary" id="btnNextAff">Next ▶</button>
-            <button id="btnRandomAff">🎲 Random</button>
-            <button class="good" id="btnFavAff">★ Favorite</button>
-            <button id="btnCopyAff">Copy</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Today’s Bible Verse</h2>
-          <div class="muted small">
-            Built-in list is <b>KJV (public domain)</b> and cycles by Day-of-Year.
-            You can replace/add your own verse list in “Manage Lists.”
-          </div>
-
-          <div class="bigbox" id="verseBox">
-            <div class="label" id="verseRef">Verse</div>
-            <div class="text" id="verseText">…</div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <button class="primary" id="btnPrevVerse">◀ Prev</button>
-            <button class="primary" id="btnNextVerse">Next ▶</button>
-            <button id="btnRandomVerse">🎲 Random</button>
-            <button class="good" id="btnFavVerse">★ Favorite</button>
-            <button id="btnCopyVerse">Copy</button>
-          </div>
-
-          <div class="notice">
-            If you paste verses from a modern translation (NIV/ESV/etc.), those are typically copyrighted.
-            For safest reuse, use KJV or verses you have permission to publish.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAVORITES -->
-    <section id="tab-favorites" class="hidden">
-      <div class="grid">
-        <div class="card">
-          <h2>Favorite Affirmations</h2>
-          <div class="muted small">Saved on this device (localStorage).</div>
-          <div class="listbox" id="favAffList"></div>
-          <div class="row" style="margin-top:10px">
-            <button class="danger" id="btnClearFavAff">Clear Favorites</button>
-          </div>
-        </div>
-        <div class="card">
-          <h2>Favorite Verses</h2>
-          <div class="muted small">Saved on this device (localStorage).</div>
-          <div class="listbox" id="favVerseList"></div>
-          <div class="row" style="margin-top:10px">
-            <button class="danger" id="btnClearFavVerse">Clear Favorites</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MANAGE LISTS -->
-    <section id="tab-manage" class="hidden">
-      <div class="card">
-        <h2>Manage Lists (Affirmations + Verses)</h2>
-        <div class="muted small">
-          Easiest: paste one item per line. Then click “Save Lists.”
-        </div>
-
-        <div class="split">
-          <div>
-            <div class="badge">Affirmations (one per line)</div>
-            <textarea id="affTextarea"></textarea>
-            <div class="row" style="margin-top:10px">
-              <button class="primary" id="btnSaveLists">Save Lists</button>
-              <button id="btnResetAff">Reset Affirmations to Built-in</button>
-            </div>
-            <div class="small muted" id="affCount">…</div>
-          </div>
-
-          <div>
-            <div class="badge">Verses (one per line as “Reference — Text”)</div>
-            <textarea id="verseTextarea"></textarea>
-            <div class="row" style="margin-top:10px">
-              <button class="primary" id="btnSaveLists2">Save Lists</button>
-              <button id="btnResetVerse">Reset Verses to Built-in</button>
-            </div>
-            <div class="small muted" id="verseCount">…</div>
-          </div>
-        </div>
-
-        <div class="notice">
-          Tip: For your Payhip book, you can export your lists from the “Backup” tab and format them in Google Docs.
-        </div>
-      </div>
-    </section>
-
-    <!-- BACKUP -->
-    <section id="tab-backup" class="hidden">
-      <div class="card">
-        <h2>Backup / Restore (JSON)</h2>
-        <div class="muted small">
-          Export your data & lists (favorites + custom lists) to a JSON file you can store in Google Drive.
-        </div>
-
-        <div class="row" style="margin-top:10px">
-          <button class="primary" id="btnExport">Export JSON</button>
-          <button id="btnImport">Import JSON</button>
-          <input type="file" id="importFile" accept="application/json" class="hidden" />
-          <button class="danger" id="btnFactoryReset">Factory Reset (clears all saved)</button>
-        </div>
-
-        <div class="bigbox" style="margin-top:12px">
-          <div class="label">What gets saved</div>
-          <div class="small">
-            ✅ Custom affirmation list (if you edited it)<br/>
-            ✅ Custom verse list (if you edited it)<br/>
-            ✅ Favorite affirmations & verses<br/>
-            ✅ Your last viewed affirmation/verse index
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer">© 2025 — Personal offline tracker. Data stays on this device unless you export it.</div>
   </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+
+    <!-- DAILY VERSE -->
+    <section class="card" aria-labelledby="verseTitle">
+      <h2 id="verseTitle">
+        Daily Bible Verse (KJV)
+        <span class="hint">Auto-rotates daily</span>
+      </h2>
+      <div class="verseRef" id="verseRef">—</div>
+      <div class="verseText" id="verseText">—</div>
+      <div class="footerRow">
+        <div class="kbd">Tip: This is based on the day of the year, so it changes each day.</div>
+        <button id="btnNewVerse">Show another verse</button>
+      </div>
+    </section>
+
+    <!-- DAILY JOURNAL -->
+    <section class="card" aria-labelledby="journalTitle">
+      <h2 id="journalTitle">
+        Daily Journal
+        <span class="hint">Add throughout the day</span>
+      </h2>
+      <div class="sub">Type below, then press <b>Add Entry</b>. You can add as many entries as you want.</div>
+
+      <textarea id="journalInput" placeholder="Write what’s on your mind... (this draft auto-saves)"></textarea>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="good" id="btnAddJournal">Add Entry</button>
+        <button class="danger" id="btnClearDraft" title="Clears ONLY the draft box (does not delete saved entries)">Clear Draft</button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="sub">Saved entries for <span id="journalDateLabel"></span>:</div>
+      <div class="list" id="journalList"></div>
+      <div class="small muted" id="journalEmpty" style="display:none;">No saved journal entries for this date yet.</div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="card" aria-labelledby="goalsTitle">
+      <h2 id="goalsTitle">
+        One Small Intention (Goals)
+        <span class="hint">Incomplete goals carry forward</span>
+      </h2>
+      <div class="sub">Add your main intention. You can add more goals. If you don’t finish today, it will still be here tomorrow.</div>
+
+      <div class="row">
+        <input id="goalInput" type="text" placeholder="Example: Drink water / Call doctor / 10-min walk" />
+        <button class="good" id="btnAddGoal">Add</button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="sub">Active goals:</div>
+      <div class="list" id="goalsList"></div>
+      <div class="small muted" id="goalsEmpty" style="display:none;">No active goals right now.</div>
+
+      <div class="hr"></div>
+      <div class="sub">Completed goals:</div>
+      <div class="list" id="goalsDoneList"></div>
+      <div class="small muted" id="goalsDoneEmpty" style="display:none;">No completed goals yet.</div>
+    </section>
+
+    <!-- CHECK-INS -->
+    <section class="card" aria-labelledby="mhTitle">
+      <h2 id="mhTitle">
+        Mental Health Check-ins
+        <span class="hint">Add multiple check-ins per day</span>
+      </h2>
+      <div class="split">
+
+        <div>
+          <div class="sub"><b>Overall Depression (1–10)</b></div>
+          <div class="scale" id="depScale"></div>
+        </div>
+
+        <div>
+          <div class="sub"><b>Overall Anxiety (1–10)</b></div>
+          <div class="scale" id="anxScale"></div>
+        </div>
+
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="sub">Optional note (what happened / why you feel this way):</div>
+        <input id="mhNote" type="text" placeholder="Optional reason..." />
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="good" id="btnAddCheckin">Add Check-in</button>
+        <button class="danger" id="btnClearCheckin">Clear Check-in</button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="sub">Saved check-ins for <span id="mhDateLabel"></span>:</div>
+      <div class="list" id="mhList"></div>
+      <div class="small muted" id="mhEmpty" style="display:none;">No check-ins for this date yet.</div>
+    </section>
+
+    <!-- APPOINTMENTS + FOLLOWUPS -->
+    <section class="card" aria-labelledby="apptTitle">
+      <h2 id="apptTitle">
+        Appointments
+        <span class="hint">Title • Date/Time • Location • Notes</span>
+      </h2>
+
+      <div class="split">
+        <input id="apptTitleInput" type="text" placeholder="Appointment title (example: Therapy / Doctor / Dentist)" />
+        <input id="apptDateTimeInput" type="datetime-local" />
+      </div>
+      <div class="split" style="margin-top:10px;">
+        <input id="apptLocationInput" type="text" placeholder="Location (optional)" />
+        <input id="apptNotesInput" type="text" placeholder="Notes (optional)" />
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="good" id="btnAddAppt">Add Appointment</button>
+        <button class="danger" id="btnClearAppt">Clear</button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="sub">Your appointments (all dates):</div>
+      <div class="list" id="apptList"></div>
+      <div class="small muted" id="apptEmpty" style="display:none;">No appointments saved yet.</div>
+
+      <div class="hr"></div>
+
+      <h2 style="margin-top:0;">
+        Follow-ups
+        <span class="hint">Contact Name • Follow-up Notes</span>
+      </h2>
+
+      <div class="split">
+        <input id="fuNameInput" type="text" placeholder="Contact name (example: Dr. Lane / HR / Caseworker)" />
+        <input id="fuNotesInput" type="text" placeholder="Follow-up notes (what you need / what to ask)" />
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="good" id="btnAddFU">Add Follow-up</button>
+        <button class="danger" id="btnClearFU">Clear</button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="sub">Follow-ups:</div>
+      <div class="list" id="fuList"></div>
+      <div class="small muted" id="fuEmpty" style="display:none;">No follow-ups saved yet.</div>
+    </section>
+
+    <!-- DAILY AFFIRMATION -->
+    <section class="card" aria-labelledby="affTitle">
+      <h2 id="affTitle">
+        Daily Affirmation (Proverbs-based)
+        <span class="hint">Auto-rotates daily</span>
+      </h2>
+      <div class="verseText" id="affText">—</div>
+      <div class="footerRow">
+        <div class="kbd">Tip: This rotates daily (Day-of-Year).</div>
+        <button id="btnNewAff">Show another affirmation</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>
+        Backup (Optional)
+        <span class="hint">Export your data</span>
+      </h2>
+      <div class="sub">If you ever need to save a backup, you can export your data as a JSON file and store it in Google Drive.</div>
+      <div class="row">
+        <button id="btnExport">Export JSON</button>
+        <button class="danger" id="btnHardReset" title="Deletes all saved data">Hard Reset (Delete Everything)</button>
+      </div>
+      <div class="small muted" style="margin-top:10px;">
+        This app stores your data only on this device/browser (local storage). No cloud. No account.
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
 
 <script>
 /* =========================
-   STORAGE KEYS
-========================= */
-const KEY_AFF_LIST = "wj_aff_list_v1";
-const KEY_VERSE_LIST = "wj_verse_list_v1";
-const KEY_FAV_AFF = "wj_fav_aff_v1";
-const KEY_FAV_VERSE = "wj_fav_verse_v1";
-const KEY_IDX_AFF = "wj_idx_aff_v1";
-const KEY_IDX_VERSE = "wj_idx_verse_v1";
+   DATA: KJV VERSES (fear list)
+   ========================= */
+
+const KJV_VERSES_FEAR = [
+  { ref: "Genesis 15:1", text: "After these things the word of the Lord came unto Abram in a vision, saying, Fear not, Abram: I am thy shield, and thy exceeding great reward." },
+  { ref: "Genesis 21:17", text: "And God heard the voice of the lad; and the angel of God called to Hagar out of heaven, and said unto her, What aileth thee, Hagar? fear not; for God hath heard the voice of the lad where he is." },
+  { ref: "Genesis 26:24", text: "And the Lord appeared unto him the same night, and said, I am the God of Abraham thy father: fear not, for I am with thee, and will bless thee..." },
+  { ref: "Genesis 35:17", text: "And it came to pass, when she was in hard labour, that the midwife said unto her, Fear not; thou shalt have this son also." },
+  { ref: "Genesis 43:23", text: "And he said, Peace be to you, fear not: your God, and the God of your father, hath given you treasure in your sacks..." },
+  { ref: "Genesis 46:3", text: "And he said, I am God, the God of thy father: fear not to go down into Egypt; for I will there make of thee a great nation." },
+  { ref: "Genesis 50:19", text: "And Joseph said unto them, Fear not: for am I in the place of God?" },
+  { ref: "Genesis 50:21", text: "Now therefore fear ye not: I will nourish you, and your little ones. And he comforted them, and spake kindly unto them." },
+
+  { ref: "Exodus 14:13", text: "And Moses said unto the people, Fear ye not, stand still, and see the salvation of the Lord, which he will shew to you to day..." },
+  { ref: "Exodus 20:20", text: "And Moses said unto the people, Fear not: for God is come to prove you, and that his fear may be before your faces, that ye sin not." },
+
+  { ref: "Numbers 14:9", text: "Only rebel not ye against the Lord, neither fear ye the people of the land... the Lord is with us: fear them not." },
+  { ref: "Numbers 21:34", text: "And the Lord said unto Moses, Fear him not: for I have delivered him into thy hand, and all his people, and his land..." },
+
+  { ref: "Deuteronomy 1:21", text: "...go up and possess it, as the Lord God of thy fathers hath said unto thee; fear not, neither be discouraged." },
+  { ref: "Deuteronomy 3:2", text: "And the Lord said unto me, Fear him not: for I will deliver him, and all his people, and his land, into thy hand..." },
+  { ref: "Deuteronomy 3:22", text: "Ye shall not fear them: for the Lord your God he shall fight for you." },
+  { ref: "Deuteronomy 31:6", text: "Be strong and of a good courage, fear not, nor be afraid of them: for the Lord thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee." },
+  { ref: "Deuteronomy 31:8", text: "And the Lord, he it is that doth go before thee... fear not, neither be dismayed." },
+
+  { ref: "Joshua 1:9", text: "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the Lord thy God is with thee whithersoever thou goest." },
+  { ref: "Joshua 8:1", text: "And the Lord said unto Joshua, Fear not, neither be thou dismayed: take all the people of war with thee, and arise, go up to Ai..." },
+  { ref: "Joshua 10:8", text: "And the Lord said unto Joshua, Fear them not: for I have delivered them into thine hand..." },
+  { ref: "Joshua 10:25", text: "And Joshua said unto them, Fear not, nor be dismayed, be strong and of good courage..." },
+
+  { ref: "Judges 4:18", text: "And Jael went out to meet Sisera, and said unto him, Turn in, my lord, turn in to me; fear not." },
+  { ref: "Judges 6:23", text: "And the Lord said unto him, Peace be unto thee; fear not: thou shalt not die." },
+
+  { ref: "Ruth 3:11", text: "And now, my daughter, fear not; I will do to thee all that thou requirest..." },
+
+  { ref: "1 Samuel 12:20", text: "And Samuel said unto the people, Fear not: ye have done all this wickedness: yet turn not aside from following the Lord..." },
+  { ref: "1 Samuel 22:23", text: "Abide thou with me, fear not: for he that seeketh my life seeketh thy life: but with me thou shalt be in safeguard." },
+  { ref: "1 Samuel 23:17", text: "And he said unto him, Fear not: for the hand of Saul my father shall not find thee..." },
+
+  { ref: "2 Samuel 9:7", text: "And David said unto him, Fear not: for I will surely shew thee kindness for Jonathan thy father's sake..." },
+  { ref: "2 Samuel 13:28", text: "...when I say unto you, Smite Amnon; then kill him, fear not: have not I commanded you? be courageous, and be valiant." },
+
+  { ref: "1 Kings 17:13", text: "And Elijah said unto her, Fear not; go and do as thou hast said: but make me thereof a little cake first..." },
+
+  { ref: "2 Kings 1:15", text: "And the angel of the Lord said unto Elijah, Go down with him: be not afraid of him." },
+  { ref: "2 Kings 6:16", text: "And he answered, Fear not: for they that be with us are more than they that be with them." },
+  { ref: "2 Kings 19:6", text: "...Be not afraid of the words which thou hast heard, with which the servants of the king of Assyria have blasphemed me." },
+  { ref: "2 Kings 25:24", text: "...Fear not to be the servants of the Chaldees: dwell in the land, and serve the king of Babylon; and it shall be well with you." },
+
+  { ref: "1 Chronicles 22:13", text: "...be strong, and of good courage; dread not, nor be dismayed." },
+  { ref: "1 Chronicles 28:20", text: "...Be strong and of good courage, and do it: fear not, nor be dismayed: for the Lord God, even my God, will be with thee..." },
+
+  { ref: "2 Chronicles 20:15", text: "...Thus saith the Lord unto you, Be not afraid nor dismayed by reason of this great multitude; for the battle is not yours, but God's." },
+  { ref: "2 Chronicles 20:17", text: "...stand ye still, and see the salvation of the Lord with you... fear not, nor be dismayed; to morrow go out against them: for the Lord will be with you." },
+  { ref: "2 Chronicles 32:7", text: "Be strong and courageous, be not afraid nor dismayed for the king of Assyria... for there be more with us than with him." },
+
+  { ref: "Nehemiah 4:14", text: "...be not ye afraid of them: remember the Lord, which is great and terrible, and fight for your brethren..." },
+
+  { ref: "Psalm 23:4", text: "Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me." },
+  { ref: "Psalm 27:1", text: "The Lord is my light and my salvation; whom shall I fear? the Lord is the strength of my life; of whom shall I be afraid?" },
+  { ref: "Psalm 27:14", text: "Wait on the Lord: be of good courage, and he shall strengthen thine heart: wait, I say, on the Lord." },
+  { ref: "Psalm 31:24", text: "Be of good courage, and he shall strengthen your heart, all ye that hope in the Lord." },
+  { ref: "Psalm 49:16", text: "Be not thou afraid when one is made rich, when the glory of his house is increased." },
+  { ref: "Psalm 56:3", text: "What time I am afraid, I will trust in thee." },
+
+  { ref: "Proverbs 3:25", text: "Be not afraid of sudden fear, neither of the desolation of the wicked, when it cometh." },
+
+  { ref: "Isaiah 7:4", text: "...Take heed, and be quiet; fear not, neither be fainthearted..." },
+  { ref: "Isaiah 10:24", text: "...O my people that dwellest in Zion, be not afraid of the Assyrian..." },
+  { ref: "Isaiah 12:2", text: "Behold, God is my salvation; I will trust, and not be afraid..." },
+  { ref: "Isaiah 35:4", text: "Say to them that are of a fearful heart, Be strong, fear not: behold, your God will come with vengeance..." },
+  { ref: "Isaiah 37:6", text: "...Thus saith the Lord, Be not afraid of the words that thou hast heard..." },
+  { ref: "Isaiah 40:9", text: "...lift up thy voice with strength; lift it up, be not afraid; say unto the cities of Judah, Behold your God!" },
+  { ref: "Isaiah 41:10", text: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee..." },
+  { ref: "Isaiah 41:13", text: "For I the Lord thy God will hold thy right hand, saying unto thee, Fear not; I will help thee." },
+  { ref: "Isaiah 41:14", text: "Fear not, thou worm Jacob, and ye men of Israel; I will help thee, saith the Lord..." },
+  { ref: "Isaiah 43:1", text: "...Fear not: for I have redeemed thee, I have called thee by thy name; thou art mine." },
+  { ref: "Isaiah 43:5", text: "Fear not: for I am with thee: I will bring thy seed from the east, and gather thee from the west." },
+  { ref: "Isaiah 44:2", text: "...Fear not, O Jacob, my servant; and thou, Jesurun, whom I have chosen." },
+  { ref: "Isaiah 44:8", text: "Fear ye not, neither be afraid: have not I told thee from that time, and have declared it? ye are even my witnesses." },
+  { ref: "Isaiah 51:7", text: "...fear ye not the reproach of men, neither be ye afraid of their revilings." },
+  { ref: "Isaiah 54:4", text: "Fear not; for thou shalt not be ashamed: neither be thou confounded; for thou shalt not be put to shame..." },
+
+  { ref: "Jeremiah 1:8", text: "Be not afraid of their faces: for I am with thee to deliver thee, saith the Lord." },
+  { ref: "Jeremiah 1:17", text: "...arise, and speak unto them all that I command thee: be not dismayed at their faces, lest I confound thee before them." },
+  { ref: "Jeremiah 10:5", text: "...be not afraid of them; for they cannot do evil, neither also is it in them to do good." },
+  { ref: "Jeremiah 30:10", text: "Therefore fear thou not, O my servant Jacob, saith the Lord; neither be dismayed, O Israel..." },
+  { ref: "Jeremiah 42:11", text: "Be not afraid of the king of Babylon... for I am with you to save you, and to deliver you from his hand." },
+  { ref: "Jeremiah 46:27", text: "But fear not thou, O my servant Jacob, and be not dismayed, O Israel: for, behold, I will save thee from afar off..." },
+  { ref: "Jeremiah 46:28", text: "Fear thou not, O Jacob my servant, saith the Lord: for I am with thee..." },
+
+  { ref: "Lamentations 3:57", text: "Thou drewest near in the day that I called upon thee: thou saidst, Fear not." },
+
+  { ref: "Ezekiel 2:6", text: "...be not afraid of them, neither be afraid of their words... nor be dismayed at their looks..." },
+  { ref: "Ezekiel 3:9", text: "...fear them not, neither be dismayed at their looks, though they be a rebellious house." },
+
+  { ref: "Obadiah 1:9", text: "And thy mighty men, O Teman, shall be dismayed..." },
+
+  { ref: "Joel 2:21", text: "Fear not, O land; be glad and rejoice: for the Lord will do great things." },
+  { ref: "Joel 2:22", text: "Be not afraid, ye beasts of the field: for the pastures of the wilderness do spring..." },
+
+  { ref: "Zephaniah 3:16", text: "In that day it shall be said to Jerusalem, Fear thou not: and to Zion, Let not thine hands be slack." },
+  { ref: "Haggai 2:5", text: "According to the word that I covenanted with you when ye came out of Egypt, so my spirit remaineth among you: fear ye not." },
+  { ref: "Zechariah 8:13", text: "...so will I save you, and ye shall be a blessing: fear not, but let your hands be strong." },
+  { ref: "Zechariah 8:15", text: "So again have I thought in these days to do well unto Jerusalem and to the house of Judah: fear ye not." },
+
+  { ref: "Matthew 1:20", text: "...Joseph, thou son of David, fear not to take unto thee Mary thy wife..." },
+  { ref: "Matthew 10:28", text: "And fear not them which kill the body, but are not able to kill the soul..." },
+  { ref: "Matthew 14:27", text: "Be of good cheer; it is I; be not afraid." },
+  { ref: "Matthew 17:7", text: "Arise, and be not afraid." },
+  { ref: "Matthew 28:5", text: "Fear not ye: for I know that ye seek Jesus, which was crucified." },
+  { ref: "Matthew 28:10", text: "Be not afraid: go tell my brethren that they go into Galilee, and there shall they see me." },
+
+  { ref: "Mark 5:36", text: "Be not afraid, only believe." },
+  { ref: "Mark 6:50", text: "Be of good cheer: it is I; be not afraid." },
+
+  { ref: "Luke 1:13", text: "Fear not, Zacharias: for thy prayer is heard..." },
+  { ref: "Luke 1:30", text: "Fear not, Mary: for thou hast found favour with God." },
+  { ref: "Luke 2:10", text: "Fear not: for, behold, I bring you good tidings of great joy..." },
+  { ref: "Luke 5:10", text: "Fear not; from henceforth thou shalt catch men." },
+  { ref: "Luke 8:50", text: "Fear not: believe only, and she shall be made whole." },
+  { ref: "Luke 12:4", text: "Be not afraid of them that kill the body..." },
+  { ref: "Luke 12:7", text: "Fear not therefore: ye are of more value than many sparrows." },
+  { ref: "Luke 12:32", text: "Fear not, little flock; for it is your Father's good pleasure to give you the kingdom." },
+
+  { ref: "John 6:20", text: "It is I; be not afraid." },
+  { ref: "John 12:15", text: "Fear not, daughter of Sion: behold, thy King cometh..." },
+  { ref: "John 14:27", text: "Let not your heart be troubled, neither let it be afraid." },
+
+  { ref: "Acts 18:9", text: "Be not afraid, but speak, and hold not thy peace." },
+  { ref: "Acts 27:24", text: "Fear not, Paul; thou must be brought before Caesar..." },
+
+  { ref: "1 Peter 3:14", text: "...be not afraid of their terror, neither be troubled." },
+  { ref: "2 Timothy 1:7", text: "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind." },
+  { ref: "Revelation 1:17", text: "Fear not; I am the first and the last." }
+];
 
 /* =========================
-   BUILT-IN AFFIRMATIONS (365)
-   (Your cleaned list)
-========================= */
-const BUILTIN_AFFIRMATIONS = [
+   DATA: 365 AFFIRMATIONS
+   ========================= */
+
+const AFFIRMATIONS_365 = [
   "I welcome wisdom into my life.",
   "I seek understanding instead of confusion.",
   "I receive instruction that helps me live rightly.",
@@ -699,462 +994,788 @@ const BUILTIN_AFFIRMATIONS = [
 ];
 
 /* =========================
-   BUILT-IN VERSES (KJV, public domain)
-   (This is a starter set you can expand/rewrite in Manage Lists.)
-========================= */
-const BUILTIN_VERSES = [
-  { ref:"Proverbs 1:7 (KJV)", text:"The fear of the LORD is the beginning of knowledge: but fools despise wisdom and instruction." },
-  { ref:"Proverbs 2:6 (KJV)", text:"For the LORD giveth wisdom: out of his mouth cometh knowledge and understanding." },
-  { ref:"Proverbs 3:5 (KJV)", text:"Trust in the LORD with all thine heart; and lean not unto thine own understanding." },
-  { ref:"Proverbs 3:6 (KJV)", text:"In all thy ways acknowledge him, and he shall direct thy paths." },
-  { ref:"Proverbs 4:23 (KJV)", text:"Keep thy heart with all diligence; for out of it are the issues of life." },
-  { ref:"Proverbs 9:10 (KJV)", text:"The fear of the LORD is the beginning of wisdom: and the knowledge of the holy is understanding." },
-  { ref:"Proverbs 10:12 (KJV)", text:"Hatred stirreth up strifes: but love covereth all sins." },
-  { ref:"Proverbs 11:2 (KJV)", text:"When pride cometh, then cometh shame: but with the lowly is wisdom." },
-  { ref:"Proverbs 12:18 (KJV)", text:"There is that speaketh like the piercings of a sword: but the tongue of the wise is health." },
-  { ref:"Proverbs 13:3 (KJV)", text:"He that keepeth his mouth keepeth his life: but he that openeth wide his lips shall have destruction." },
-  { ref:"Proverbs 14:29 (KJV)", text:"He that is slow to wrath is of great understanding: but he that is hasty of spirit exalteth folly." },
-  { ref:"Proverbs 15:1 (KJV)", text:"A soft answer turneth away wrath: but grievous words stir up anger." },
-  { ref:"Proverbs 16:3 (KJV)", text:"Commit thy works unto the LORD, and thy thoughts shall be established." },
-  { ref:"Proverbs 16:9 (KJV)", text:"A man's heart deviseth his way: but the LORD directeth his steps." },
-  { ref:"Proverbs 17:17 (KJV)", text:"A friend loveth at all times, and a brother is born for adversity." },
-  { ref:"Proverbs 18:10 (KJV)", text:"The name of the LORD is a strong tower: the righteous runneth into it, and is safe." },
-  { ref:"Proverbs 18:21 (KJV)", text:"Death and life are in the power of the tongue: and they that love it shall eat the fruit thereof." },
-  { ref:"Proverbs 19:11 (KJV)", text:"The discretion of a man deferreth his anger; and it is his glory to pass over a transgression." },
-  { ref:"Proverbs 20:22 (KJV)", text:"Say not thou, I will recompense evil; but wait on the LORD, and he shall save thee." },
-  { ref:"Proverbs 21:2 (KJV)", text:"Every way of a man is right in his own eyes: but the LORD pondereth the hearts." },
-  { ref:"Proverbs 21:31 (KJV)", text:"The horse is prepared against the day of battle: but safety is of the LORD." },
-  { ref:"Proverbs 22:1 (KJV)", text:"A good name is rather to be chosen than great riches, and loving favour rather than silver and gold." },
-  { ref:"Proverbs 23:17 (KJV)", text:"Let not thine heart envy sinners: but be thou in the fear of the LORD all the day long." },
-  { ref:"Proverbs 24:10 (KJV)", text:"If thou faint in the day of adversity, thy strength is small." },
-  { ref:"Proverbs 25:28 (KJV)", text:"He that hath no rule over his own spirit is like a city that is broken down, and without walls." },
-  { ref:"Proverbs 26:20 (KJV)", text:"Where no wood is, there the fire goeth out: so where there is no talebearer, the strife ceaseth." },
-  { ref:"Proverbs 27:17 (KJV)", text:"Iron sharpeneth iron; so a man sharpeneth the countenance of his friend." },
-  { ref:"Proverbs 28:1 (KJV)", text:"The wicked flee when no man pursueth: but the righteous are bold as a lion." },
-  { ref:"Proverbs 29:25 (KJV)", text:"The fear of man bringeth a snare: but whoso putteth his trust in the LORD shall be safe." },
-  { ref:"Proverbs 30:5 (KJV)", text:"Every word of God is pure: he is a shield unto them that put their trust in him." },
-  { ref:"Proverbs 31:25 (KJV)", text:"Strength and honour are her clothing; and she shall rejoice in time to come." }
-];
+   STORAGE + HELPERS
+   ========================= */
 
-/* =========================
-   HELPERS
-========================= */
+const STORE_KEY = "wellness_app_kjv_proverbs_v1";
+
+function nowISO(){ return new Date().toISOString(); }
+function todayLocalISODate(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function toLocalTimeLabel(iso){
+  const d = new Date(iso);
+  return d.toLocaleTimeString([], { hour:"numeric", minute:"2-digit" });
+}
+function toLocalDateTimeLabel(iso){
+  const d = new Date(iso);
+  return d.toLocaleString([], { year:"numeric", month:"short", day:"numeric", hour:"numeric", minute:"2-digit" });
+}
 function dayOfYear(date = new Date()){
   const start = new Date(date.getFullYear(), 0, 0);
-  const diff = (date - start) + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60 * 1000);
+  const diff = date - start;
   const oneDay = 1000 * 60 * 60 * 24;
   return Math.floor(diff / oneDay);
 }
-function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-function safeParseJSON(str, fallback){ try{return JSON.parse(str);}catch(e){return fallback;} }
-function uniqNonEmptyLines(text){
-  const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-  const seen = new Set();
-  const out = [];
-  for(const l of lines){
-    const key = l.replace(/\s+/g," ").toLowerCase();
-    if(!seen.has(key)){ seen.add(key); out.push(l); }
-  }
-  return out;
+function uid(){
+  return Math.random().toString(36).slice(2) + "-" + Date.now().toString(36);
 }
-function formatVerseLinesToObjects(text){
-  // expects "Reference — Text" or "Reference - Text"
-  const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-  const out = [];
-  for(const line of lines){
-    const m = line.split(/—|-{1,2}/); // rough split
-    if(m.length >= 2){
-      const ref = m.shift().trim();
-      const textPart = m.join("-").trim();
-      out.push({ref, text:textPart});
-    } else {
-      // if they paste just a verse reference, keep it but blank text
-      out.push({ref: line, text:""});
-    }
+function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return freshState();
+    const parsed = JSON.parse(raw);
+    return migrate(parsed);
+  }catch(e){
+    return freshState();
   }
-  return out;
 }
-function verseObjectsToLines(arr){
-  return arr.map(v => `${v.ref} — ${v.text}`.trim()).join("\n");
+function freshState(){
+  return {
+    version: 1,
+    viewDate: todayLocalISODate(),
+    verseShuffleSeed: 0,
+    affShuffleSeed: 0,
+    journal: {
+      // [date]: { draft: "", entries: [{ts,text}] }
+    },
+    goals: [
+      // {id,text,createdAt,completed:boolean,completedAt:null}
+    ],
+    moods: {
+      // [date]: [{id,ts,dep,anx,note}]
+    },
+    appointments: [
+      // {id,title,datetime,location,notes,createdAt}
+    ],
+    followups: [
+      // {id,name,notes,createdAt,done:boolean,doneAt:null}
+    ]
+  };
 }
-function copyToClipboard(text){
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text);
-    return true;
-  }
-  // fallback
-  const ta = document.createElement("textarea");
-  ta.value = text;
-  document.body.appendChild(ta);
-  ta.select();
-  try{ document.execCommand("copy"); }catch(e){}
-  document.body.removeChild(ta);
-  return true;
+function migrate(s){
+  // basic guard
+  if(!s || typeof s !== "object") return freshState();
+  if(!s.version) s.version = 1;
+  if(!s.viewDate) s.viewDate = todayLocalISODate();
+  if(!s.journal) s.journal = {};
+  if(!s.goals) s.goals = [];
+  if(!s.moods) s.moods = {};
+  if(!s.appointments) s.appointments = [];
+  if(!s.followups) s.followups = [];
+  if(typeof s.verseShuffleSeed !== "number") s.verseShuffleSeed = 0;
+  if(typeof s.affShuffleSeed !== "number") s.affShuffleSeed = 0;
+  return s;
+}
+
+let STATE = loadState();
+let saveTimer = null;
+
+function saveState(showToastMsg){
+  localStorage.setItem(STORE_KEY, JSON.stringify(STATE));
+  setSaveStatus("Saved");
+  if(showToastMsg) toast(showToastMsg);
+}
+function scheduleSave(showToastMsg){
+  setSaveStatus("Saving…");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>saveState(showToastMsg), 250);
+}
+function setSaveStatus(txt){
+  const el = document.getElementById("saveStatus");
+  if(el) el.textContent = txt;
+}
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1400);
 }
 
 /* =========================
-   LOAD SAVED OR BUILT-IN
-========================= */
-function getAffirmations(){
-  const saved = localStorage.getItem(KEY_AFF_LIST);
-  const list = saved ? safeParseJSON(saved, null) : null;
-  return Array.isArray(list) && list.length ? list : BUILTIN_AFFIRMATIONS.slice();
-}
-function getVerses(){
-  const saved = localStorage.getItem(KEY_VERSE_LIST);
-  const list = saved ? safeParseJSON(saved, null) : null;
-  return Array.isArray(list) && list.length ? list : BUILTIN_VERSES.slice();
-}
-function getFavAff(){ return safeParseJSON(localStorage.getItem(KEY_FAV_AFF) || "[]", []); }
-function getFavVerse(){ return safeParseJSON(localStorage.getItem(KEY_FAV_VERSE) || "[]", []); }
-function setFavAff(arr){ localStorage.setItem(KEY_FAV_AFF, JSON.stringify(arr)); }
-function setFavVerse(arr){ localStorage.setItem(KEY_FAV_VERSE, JSON.stringify(arr)); }
+   UI BINDINGS
+   ========================= */
+
+const elLiveDate = document.getElementById("liveDate");
+const elLiveTime = document.getElementById("liveTime");
+const elViewDate = document.getElementById("viewDate");
+const btnToday = document.getElementById("btnToday");
+const btnSaveAll = document.getElementById("btnSaveAll");
+
+const verseRef = document.getElementById("verseRef");
+const verseText = document.getElementById("verseText");
+const btnNewVerse = document.getElementById("btnNewVerse");
+
+const affText = document.getElementById("affText");
+const btnNewAff = document.getElementById("btnNewAff");
+
+const journalInput = document.getElementById("journalInput");
+const btnAddJournal = document.getElementById("btnAddJournal");
+const btnClearDraft = document.getElementById("btnClearDraft");
+const journalList = document.getElementById("journalList");
+const journalEmpty = document.getElementById("journalEmpty");
+const journalDateLabel = document.getElementById("journalDateLabel");
+
+const goalInput = document.getElementById("goalInput");
+const btnAddGoal = document.getElementById("btnAddGoal");
+const goalsList = document.getElementById("goalsList");
+const goalsEmpty = document.getElementById("goalsEmpty");
+const goalsDoneList = document.getElementById("goalsDoneList");
+const goalsDoneEmpty = document.getElementById("goalsDoneEmpty");
+
+const depScale = document.getElementById("depScale");
+const anxScale = document.getElementById("anxScale");
+const mhNote = document.getElementById("mhNote");
+const btnAddCheckin = document.getElementById("btnAddCheckin");
+const btnClearCheckin = document.getElementById("btnClearCheckin");
+const mhList = document.getElementById("mhList");
+const mhEmpty = document.getElementById("mhEmpty");
+const mhDateLabel = document.getElementById("mhDateLabel");
+
+const apptTitleInput = document.getElementById("apptTitleInput");
+const apptDateTimeInput = document.getElementById("apptDateTimeInput");
+const apptLocationInput = document.getElementById("apptLocationInput");
+const apptNotesInput = document.getElementById("apptNotesInput");
+const btnAddAppt = document.getElementById("btnAddAppt");
+const btnClearAppt = document.getElementById("btnClearAppt");
+const apptList = document.getElementById("apptList");
+const apptEmpty = document.getElementById("apptEmpty");
+
+const fuNameInput = document.getElementById("fuNameInput");
+const fuNotesInput = document.getElementById("fuNotesInput");
+const btnAddFU = document.getElementById("btnAddFU");
+const btnClearFU = document.getElementById("btnClearFU");
+const fuList = document.getElementById("fuList");
+const fuEmpty = document.getElementById("fuEmpty");
+
+const btnExport = document.getElementById("btnExport");
+const btnHardReset = document.getElementById("btnHardReset");
 
 /* =========================
-   STATE
-========================= */
-let AFFS = getAffirmations();
-let VERSES = getVerses();
+   LIVE DATE/TIME
+   ========================= */
 
-let idxAff = parseInt(localStorage.getItem(KEY_IDX_AFF) || "", 10);
-let idxVerse = parseInt(localStorage.getItem(KEY_IDX_VERSE) || "", 10);
-
-const doy = dayOfYear(new Date()); // 1..365/366
-if(Number.isNaN(idxAff)) idxAff = (doy - 1) % Math.max(1, AFFS.length);
-if(Number.isNaN(idxVerse)) idxVerse = (doy - 1) % Math.max(1, VERSES.length);
-
-function saveIdx(){
-  localStorage.setItem(KEY_IDX_AFF, String(idxAff));
-  localStorage.setItem(KEY_IDX_VERSE, String(idxVerse));
-}
-
-/* =========================
-   RENDER
-========================= */
-const el = (id)=>document.getElementById(id);
-
-function renderTodayPill(){
+function tickClock(){
   const d = new Date();
-  const opts = { weekday:"short", year:"numeric", month:"short", day:"numeric" };
-  el("todayPill").textContent = `${d.toLocaleDateString(undefined, opts)} • Day ${doy}`;
+  elLiveDate.textContent = d.toLocaleDateString([], { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+  elLiveTime.textContent = d.toLocaleTimeString([], { hour:"numeric", minute:"2-digit", second:"2-digit" });
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+/* =========================
+   DAILY SELECTION (Verse + Affirmation)
+   - Based on day-of-year + optional shuffle seed
+   ========================= */
+
+function getDailyVerseIndex(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  const doy = dayOfYear(d);
+  const base = (doy + STATE.verseShuffleSeed) % KJV_VERSES_FEAR.length;
+  return clamp(base, 0, KJV_VERSES_FEAR.length - 1);
+}
+function getDailyAffIndex(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  const doy = dayOfYear(d);
+  const base = (doy + STATE.affShuffleSeed) % AFFIRMATIONS_365.length;
+  return clamp(base, 0, AFFIRMATIONS_365.length - 1);
 }
 
-function renderDaily(){
-  AFFS = getAffirmations();
-  VERSES = getVerses();
-
-  idxAff = clamp(idxAff, 0, AFFS.length - 1);
-  idxVerse = clamp(idxVerse, 0, VERSES.length - 1);
-  saveIdx();
-
-  el("affLabel").textContent = `Affirmation (${idxAff + 1} / ${AFFS.length})`;
-  el("affText").textContent = AFFS[idxAff] || "—";
-
-  const v = VERSES[idxVerse] || {ref:"—", text:""};
-  el("verseRef").textContent = `${v.ref} (${idxVerse + 1} / ${VERSES.length})`;
-  el("verseText").textContent = v.text || "—";
-
-  // counts in manage tab
-  el("affCount").textContent = `Current affirmations: ${AFFS.length}`;
-  el("verseCount").textContent = `Current verses: ${VERSES.length}`;
+function renderDailyVerse(){
+  const idx = getDailyVerseIndex(STATE.viewDate);
+  const v = KJV_VERSES_FEAR[idx];
+  verseRef.textContent = v ? v.ref : "—";
+  verseText.textContent = v ? v.text : "—";
 }
-
-function renderFavorites(){
-  const favA = getFavAff();
-  const favV = getFavVerse();
-
-  el("favAffList").innerHTML = favA.length ? "" : `<div class="muted small">No favorites yet.</div>`;
-  favA.forEach((t, i)=>{
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `<div class="k">Affirmation</div><div class="v">${escapeHtml(t)}</div>
-                     <div class="row" style="margin-top:8px">
-                       <button data-i="${i}" data-type="aff" class="danger btnRemoveFav">Remove</button>
-                       <button data-text="${encodeURIComponent(t)}" class="btnCopyFav">Copy</button>
-                     </div>`;
-    el("favAffList").appendChild(div);
-  });
-
-  el("favVerseList").innerHTML = favV.length ? "" : `<div class="muted small">No favorites yet.</div>`;
-  favV.forEach((obj, i)=>{
-    const line = `${obj.ref} — ${obj.text}`.trim();
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `<div class="k">Verse</div><div class="v">${escapeHtml(line)}</div>
-                     <div class="row" style="margin-top:8px">
-                       <button data-i="${i}" data-type="verse" class="danger btnRemoveFav">Remove</button>
-                       <button data-text="${encodeURIComponent(line)}" class="btnCopyFav">Copy</button>
-                     </div>`;
-    el("favVerseList").appendChild(div);
-  });
-
-  document.querySelectorAll(".btnRemoveFav").forEach(btn=>{
-    btn.onclick = ()=>{
-      const i = parseInt(btn.getAttribute("data-i"),10);
-      const type = btn.getAttribute("data-type");
-      if(type==="aff"){
-        const a = getFavAff(); a.splice(i,1); setFavAff(a);
-      } else {
-        const v = getFavVerse(); v.splice(i,1); setFavVerse(v);
-      }
-      renderFavorites();
-    };
-  });
-  document.querySelectorAll(".btnCopyFav").forEach(btn=>{
-    btn.onclick = ()=>{
-      const t = decodeURIComponent(btn.getAttribute("data-text")||"");
-      copyToClipboard(t);
-      btn.textContent = "Copied!";
-      setTimeout(()=>btn.textContent="Copy", 900);
-    };
-  });
-}
-
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;").replaceAll("<","&lt;")
-    .replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+function renderDailyAff(){
+  const idx = getDailyAffIndex(STATE.viewDate);
+  const a = AFFIRMATIONS_365[idx];
+  affText.textContent = a || "—";
 }
 
 /* =========================
-   TAB NAV
-========================= */
-function showTab(name){
-  document.querySelectorAll(".tabbtn").forEach(b=>{
-    b.classList.toggle("active", b.getAttribute("data-tab")===name);
+   JOURNAL
+   ========================= */
+
+function ensureJournal(dateStr){
+  if(!STATE.journal[dateStr]) STATE.journal[dateStr] = { draft:"", entries:[] };
+  if(!Array.isArray(STATE.journal[dateStr].entries)) STATE.journal[dateStr].entries = [];
+  if(typeof STATE.journal[dateStr].draft !== "string") STATE.journal[dateStr].draft = "";
+}
+function renderJournal(){
+  const d = STATE.viewDate;
+  ensureJournal(d);
+  journalDateLabel.textContent = d;
+  journalInput.value = STATE.journal[d].draft || "";
+
+  const entries = STATE.journal[d].entries.slice().sort((a,b)=> (a.ts>b.ts? -1 : 1));
+  journalList.innerHTML = "";
+  if(entries.length === 0){
+    journalEmpty.style.display = "block";
+    return;
+  }
+  journalEmpty.style.display = "none";
+  for(const e of entries){
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="left">
+        <div style="white-space:pre-wrap;">${escapeHTML(e.text)}</div>
+        <div class="meta">${toLocalTimeLabel(e.ts)}</div>
+      </div>
+      <div class="actions">
+        <button class="danger" data-del="${e.id}">Delete</button>
+      </div>
+    `;
+    journalList.appendChild(div);
+  }
+  journalList.querySelectorAll("button[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-del");
+      STATE.journal[d].entries = STATE.journal[d].entries.filter(x=>x.id !== id);
+      scheduleSave("Deleted");
+      renderJournal();
+    });
   });
-  ["daily","favorites","manage","backup"].forEach(t=>{
-    el(`tab-${t}`).classList.toggle("hidden", t!==name);
-  });
-  if(name==="favorites") renderFavorites();
-  if(name==="manage") loadManageTextareas();
-  renderDaily();
 }
 
-document.querySelectorAll(".tabbtn").forEach(btn=>{
-  btn.addEventListener("click", ()=> showTab(btn.getAttribute("data-tab")));
+journalInput.addEventListener("input", ()=>{
+  ensureJournal(STATE.viewDate);
+  STATE.journal[STATE.viewDate].draft = journalInput.value;
+  scheduleSave();
+});
+
+btnAddJournal.addEventListener("click", ()=>{
+  const txt = (journalInput.value || "").trim();
+  if(!txt){ toast("Write something first"); return; }
+  ensureJournal(STATE.viewDate);
+  STATE.journal[STATE.viewDate].entries.push({ id: uid(), ts: nowISO(), text: txt });
+  STATE.journal[STATE.viewDate].draft = "";
+  journalInput.value = "";
+  scheduleSave("Journal entry saved");
+  renderJournal();
+});
+
+btnClearDraft.addEventListener("click", ()=>{
+  ensureJournal(STATE.viewDate);
+  STATE.journal[STATE.viewDate].draft = "";
+  journalInput.value = "";
+  scheduleSave("Draft cleared");
 });
 
 /* =========================
-   DAILY BUTTONS
-========================= */
-el("btnPrevAff").onclick = ()=>{ idxAff = (idxAff - 1 + AFFS.length) % AFFS.length; renderDaily(); };
-el("btnNextAff").onclick = ()=>{ idxAff = (idxAff + 1) % AFFS.length; renderDaily(); };
-el("btnRandomAff").onclick = ()=>{ idxAff = Math.floor(Math.random()*AFFS.length); renderDaily(); };
-el("btnCopyAff").onclick = ()=>{
-  copyToClipboard(AFFS[idxAff] || "");
-  el("btnCopyAff").textContent="Copied!";
-  setTimeout(()=>el("btnCopyAff").textContent="Copy", 900);
-};
-el("btnFavAff").onclick = ()=>{
-  const text = AFFS[idxAff];
-  const fav = getFavAff();
-  const key = (text||"").replace(/\s+/g," ").trim().toLowerCase();
-  if(!text) return;
-  if(!fav.some(x => x.replace(/\s+/g," ").trim().toLowerCase()===key)){
-    fav.unshift(text);
-    setFavAff(fav);
-  }
-  el("btnFavAff").textContent="Saved ★";
-  setTimeout(()=>el("btnFavAff").textContent="★ Favorite", 900);
-};
+   GOALS (carry forward until completed)
+   ========================= */
 
-el("btnPrevVerse").onclick = ()=>{ idxVerse = (idxVerse - 1 + VERSES.length) % VERSES.length; renderDaily(); };
-el("btnNextVerse").onclick = ()=>{ idxVerse = (idxVerse + 1) % VERSES.length; renderDaily(); };
-el("btnRandomVerse").onclick = ()=>{ idxVerse = Math.floor(Math.random()*VERSES.length); renderDaily(); };
-el("btnCopyVerse").onclick = ()=>{
-  const v = VERSES[idxVerse] || {ref:"", text:""};
-  const line = `${v.ref} — ${v.text}`.trim();
-  copyToClipboard(line);
-  el("btnCopyVerse").textContent="Copied!";
-  setTimeout(()=>el("btnCopyVerse").textContent="Copy", 900);
-};
-el("btnFavVerse").onclick = ()=>{
-  const v = VERSES[idxVerse];
+function renderGoals(){
+  const active = STATE.goals.filter(g=>!g.completed).sort((a,b)=> (a.createdAt > b.createdAt ? -1 : 1));
+  const done = STATE.goals.filter(g=>g.completed).sort((a,b)=> (a.completedAt > b.completedAt ? -1 : 1));
+
+  goalsList.innerHTML = "";
+  goalsDoneList.innerHTML = "";
+
+  goalsEmpty.style.display = active.length ? "none" : "block";
+  goalsDoneEmpty.style.display = done.length ? "none" : "block";
+
+  for(const g of active){
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="left">
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <input type="checkbox" data-done="${g.id}" style="margin-top:3px; transform:scale(1.2);" />
+          <div style="white-space:pre-wrap; flex:1;">${escapeHTML(g.text)}</div>
+        </div>
+        <div class="meta">Added: ${toLocalDateTimeLabel(g.createdAt)}</div>
+      </div>
+      <div class="actions">
+        <button class="danger" data-del="${g.id}">Delete</button>
+      </div>
+    `;
+    goalsList.appendChild(div);
+  }
+
+  for(const g of done){
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="left">
+        <div style="white-space:pre-wrap; text-decoration: line-through;">${escapeHTML(g.text)}</div>
+        <div class="meta">Completed: ${g.completedAt ? toLocalDateTimeLabel(g.completedAt) : "—"}</div>
+      </div>
+      <div class="actions">
+        <button data-undo="${g.id}">Undo</button>
+        <button class="danger" data-del="${g.id}">Delete</button>
+      </div>
+    `;
+    goalsDoneList.appendChild(div);
+  }
+
+  goalsList.querySelectorAll("input[data-done]").forEach(cb=>{
+    cb.addEventListener("change", ()=>{
+      const id = cb.getAttribute("data-done");
+      const goal = STATE.goals.find(x=>x.id === id);
+      if(goal){
+        goal.completed = true;
+        goal.completedAt = nowISO();
+        scheduleSave("Goal completed");
+        renderGoals();
+      }
+    });
+  });
+
+  document.querySelectorAll("button[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-del");
+      // careful: this selector exists in multiple sections; scope by checking parent containers
+      if(btn.closest("#goalsList") || btn.closest("#goalsDoneList")){
+        STATE.goals = STATE.goals.filter(x=>x.id !== id);
+        scheduleSave("Deleted");
+        renderGoals();
+      }
+    });
+  });
+
+  goalsDoneList.querySelectorAll("button[data-undo]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-undo");
+      const goal = STATE.goals.find(x=>x.id === id);
+      if(goal){
+        goal.completed = false;
+        goal.completedAt = null;
+        scheduleSave("Restored");
+        renderGoals();
+      }
+    });
+  });
+}
+
+btnAddGoal.addEventListener("click", ()=>{
+  const txt = (goalInput.value || "").trim();
+  if(!txt){ toast("Type a goal first"); return; }
+  STATE.goals.push({ id: uid(), text: txt, createdAt: nowISO(), completed:false, completedAt:null });
+  goalInput.value = "";
+  scheduleSave("Goal added");
+  renderGoals();
+});
+
+/* =========================
+   MENTAL HEALTH CHECK-INS (1–10 buttons)
+   ========================= */
+
+let currentDep = null;
+let currentAnx = null;
+
+function buildScale(container, onPick){
+  container.innerHTML = "";
+  for(let i=1;i<=10;i++){
+    const b = document.createElement("div");
+    b.className = "numBtn";
+    b.textContent = String(i);
+    b.setAttribute("role","button");
+    b.setAttribute("tabindex","0");
+    b.addEventListener("click", ()=> onPick(i));
+    b.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onPick(i); } });
+    container.appendChild(b);
+  }
+}
+function setScaleSelected(container, val){
+  container.querySelectorAll(".numBtn").forEach(btn=>{
+    const n = Number(btn.textContent);
+    btn.classList.toggle("sel", n === val);
+  });
+}
+
+buildScale(depScale, (n)=>{ currentDep = n; setScaleSelected(depScale, n); });
+buildScale(anxScale, (n)=>{ currentAnx = n; setScaleSelected(anxScale, n); });
+
+function ensureMoods(dateStr){
+  if(!STATE.moods[dateStr]) STATE.moods[dateStr] = [];
+  if(!Array.isArray(STATE.moods[dateStr])) STATE.moods[dateStr] = [];
+}
+function renderMoods(){
+  const d = STATE.viewDate;
+  ensureMoods(d);
+  mhDateLabel.textContent = d;
+
+  const entries = STATE.moods[d].slice().sort((a,b)=> (a.ts>b.ts? -1 : 1));
+  mhList.innerHTML = "";
+  if(entries.length === 0){
+    mhEmpty.style.display = "block";
+    return;
+  }
+  mhEmpty.style.display = "none";
+
+  for(const e of entries){
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="left">
+        <div><b>Depression:</b> ${e.dep} &nbsp;&nbsp; <b>Anxiety:</b> ${e.anx}</div>
+        ${e.note ? `<div style="white-space:pre-wrap; margin-top:6px;">${escapeHTML(e.note)}</div>` : ""}
+        <div class="meta">${toLocalTimeLabel(e.ts)}</div>
+      </div>
+      <div class="actions">
+        <button class="danger" data-del-mh="${e.id}">Delete</button>
+      </div>
+    `;
+    mhList.appendChild(div);
+  }
+
+  mhList.querySelectorAll("button[data-del-mh]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-del-mh");
+      STATE.moods[d] = STATE.moods[d].filter(x=>x.id !== id);
+      scheduleSave("Deleted");
+      renderMoods();
+    });
+  });
+}
+
+btnAddCheckin.addEventListener("click", ()=>{
+  if(currentDep === null || currentAnx === null){
+    toast("Pick Depression and Anxiety (1–10)");
+    return;
+  }
+  const note = (mhNote.value || "").trim();
+  const d = STATE.viewDate;
+  ensureMoods(d);
+  STATE.moods[d].push({ id: uid(), ts: nowISO(), dep: currentDep, anx: currentAnx, note });
+  mhNote.value = "";
+  scheduleSave("Check-in saved");
+  renderMoods();
+});
+
+btnClearCheckin.addEventListener("click", ()=>{
+  currentDep = null;
+  currentAnx = null;
+  mhNote.value = "";
+  setScaleSelected(depScale, -1);
+  setScaleSelected(anxScale, -1);
+  toast("Cleared");
+});
+
+/* =========================
+   APPOINTMENTS
+   ========================= */
+
+function renderAppointments(){
+  apptList.innerHTML = "";
+  const list = STATE.appointments.slice().sort((a,b)=> (a.datetime > b.datetime ? 1 : -1));
+  apptEmpty.style.display = list.length ? "none" : "block";
+  for(const a of list){
+    const when = a.datetime ? new Date(a.datetime).toLocaleString([], { year:"numeric", month:"short", day:"numeric", hour:"numeric", minute:"2-digit" }) : "—";
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="left">
+        <div><b>${escapeHTML(a.title || "Untitled")}</b></div>
+        <div class="meta">${when}${a.location ? " • " + escapeHTML(a.location) : ""}</div>
+        ${a.notes ? `<div style="white-space:pre-wrap; margin-top:6px;">${escapeHTML(a.notes)}</div>` : ""}
+      </div>
+      <div class="actions">
+        <button data-edit-appt="${a.id}">Edit</button>
+        <button class="danger" data-del-appt="${a.id}">Delete</button>
+      </div>
+    `;
+    apptList.appendChild(div);
+  }
+
+  apptList.querySelectorAll("button[data-del-appt]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-del-appt");
+      STATE.appointments = STATE.appointments.filter(x=>x.id !== id);
+      scheduleSave("Deleted");
+      renderAppointments();
+    });
+  });
+
+  apptList.querySelectorAll("button[data-edit-appt]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-edit-appt");
+      const a = STATE.appointments.find(x=>x.id === id);
+      if(!a) return;
+      apptTitleInput.value = a.title || "";
+      apptDateTimeInput.value = a.datetime || "";
+      apptLocationInput.value = a.location || "";
+      apptNotesInput.value = a.notes || "";
+      // store editing id on button dataset
+      btnAddAppt.dataset.editing = id;
+      btnAddAppt.textContent = "Save Changes";
+      toast("Editing appointment");
+    });
+  });
+}
+
+btnAddAppt.addEventListener("click", ()=>{
+  const title = (apptTitleInput.value || "").trim();
+  const datetime = apptDateTimeInput.value || "";
+  const location = (apptLocationInput.value || "").trim();
+  const notes = (apptNotesInput.value || "").trim();
+
+  if(!title && !datetime){
+    toast("Add a title or date/time");
+    return;
+  }
+
+  const editingId = btnAddAppt.dataset.editing;
+  if(editingId){
+    const a = STATE.appointments.find(x=>x.id === editingId);
+    if(a){
+      a.title = title;
+      a.datetime = datetime;
+      a.location = location;
+      a.notes = notes;
+      scheduleSave("Appointment updated");
+    }
+    delete btnAddAppt.dataset.editing;
+    btnAddAppt.textContent = "Add Appointment";
+  }else{
+    STATE.appointments.push({ id: uid(), title, datetime, location, notes, createdAt: nowISO() });
+    scheduleSave("Appointment added");
+  }
+
+  clearApptInputs();
+  renderAppointments();
+});
+
+function clearApptInputs(){
+  apptTitleInput.value = "";
+  apptDateTimeInput.value = "";
+  apptLocationInput.value = "";
+  apptNotesInput.value = "";
+  delete btnAddAppt.dataset.editing;
+  btnAddAppt.textContent = "Add Appointment";
+}
+btnClearAppt.addEventListener("click", ()=>{
+  clearApptInputs();
+  toast("Cleared");
+});
+
+/* =========================
+   FOLLOW-UPS
+   ========================= */
+
+function renderFollowups(){
+  fuList.innerHTML = "";
+  const list = STATE.followups.slice().sort((a,b)=> (a.createdAt > b.createdAt ? -1 : 1));
+  fuEmpty.style.display = list.length ? "none" : "block";
+
+  for(const f of list){
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="left">
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <input type="checkbox" ${f.done ? "checked" : ""} data-fu-done="${f.id}" style="margin-top:3px; transform:scale(1.2);" />
+          <div style="flex:1;">
+            <div><b>${escapeHTML(f.name || "Unnamed contact")}</b></div>
+            ${f.notes ? `<div style="white-space:pre-wrap; margin-top:6px;">${escapeHTML(f.notes)}</div>` : ""}
+            <div class="meta">${f.done ? "Done: " + (f.doneAt ? toLocalDateTimeLabel(f.doneAt) : "") : "Added: " + toLocalDateTimeLabel(f.createdAt)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button data-edit-fu="${f.id}">Edit</button>
+        <button class="danger" data-del-fu="${f.id}">Delete</button>
+      </div>
+    `;
+    fuList.appendChild(div);
+  }
+
+  fuList.querySelectorAll("input[data-fu-done]").forEach(cb=>{
+    cb.addEventListener("change", ()=>{
+      const id = cb.getAttribute("data-fu-done");
+      const f = STATE.followups.find(x=>x.id === id);
+      if(!f) return;
+      f.done = cb.checked;
+      f.doneAt = cb.checked ? nowISO() : null;
+      scheduleSave(cb.checked ? "Marked done" : "Marked not done");
+      renderFollowups();
+    });
+  });
+
+  fuList.querySelectorAll("button[data-del-fu]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-del-fu");
+      STATE.followups = STATE.followups.filter(x=>x.id !== id);
+      scheduleSave("Deleted");
+      renderFollowups();
+    });
+  });
+
+  fuList.querySelectorAll("button[data-edit-fu]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.getAttribute("data-edit-fu");
+      const f = STATE.followups.find(x=>x.id === id);
+      if(!f) return;
+      fuNameInput.value = f.name || "";
+      fuNotesInput.value = f.notes || "";
+      btnAddFU.dataset.editing = id;
+      btnAddFU.textContent = "Save Changes";
+      toast("Editing follow-up");
+    });
+  });
+}
+
+btnAddFU.addEventListener("click", ()=>{
+  const name = (fuNameInput.value || "").trim();
+  const notes = (fuNotesInput.value || "").trim();
+  if(!name && !notes){
+    toast("Add a name or a note");
+    return;
+  }
+
+  const editingId = btnAddFU.dataset.editing;
+  if(editingId){
+    const f = STATE.followups.find(x=>x.id === editingId);
+    if(f){
+      f.name = name;
+      f.notes = notes;
+      scheduleSave("Follow-up updated");
+    }
+    delete btnAddFU.dataset.editing;
+    btnAddFU.textContent = "Add Follow-up";
+  }else{
+    STATE.followups.push({ id: uid(), name, notes, createdAt: nowISO(), done:false, doneAt:null });
+    scheduleSave("Follow-up added");
+  }
+
+  clearFUInputs();
+  renderFollowups();
+});
+
+function clearFUInputs(){
+  fuNameInput.value = "";
+  fuNotesInput.value = "";
+  delete btnAddFU.dataset.editing;
+  btnAddFU.textContent = "Add Follow-up";
+}
+btnClearFU.addEventListener("click", ()=>{
+  clearFUInputs();
+  toast("Cleared");
+});
+
+/* =========================
+   VIEW DATE CONTROL
+   ========================= */
+
+function renderAll(){
+  elViewDate.value = STATE.viewDate;
+  renderDailyVerse();
+  renderDailyAff();
+  renderJournal();
+  renderGoals();
+  renderMoods();
+  renderAppointments();
+  renderFollowups();
+}
+
+elViewDate.addEventListener("change", ()=>{
+  const v = elViewDate.value;
   if(!v) return;
-  const fav = getFavVerse();
-  const key = `${v.ref} — ${v.text}`.replace(/\s+/g," ").trim().toLowerCase();
-  if(!fav.some(x => (`${x.ref} — ${x.text}`).replace(/\s+/g," ").trim().toLowerCase()===key)){
-    fav.unshift({ref:v.ref, text:v.text});
-    setFavVerse(fav);
-  }
-  el("btnFavVerse").textContent="Saved ★";
-  setTimeout(()=>el("btnFavVerse").textContent="★ Favorite", 900);
-};
+  STATE.viewDate = v;
+  scheduleSave();
+  renderAll();
+});
+
+btnToday.addEventListener("click", ()=>{
+  STATE.viewDate = todayLocalISODate();
+  elViewDate.value = STATE.viewDate;
+  scheduleSave("Today");
+  renderAll();
+});
+
+btnSaveAll.addEventListener("click", ()=>{
+  saveState("Saved");
+});
 
 /* =========================
-   FAVORITES CLEAR
-========================= */
-el("btnClearFavAff").onclick = ()=>{
-  if(confirm("Clear all favorite affirmations?")){
-    setFavAff([]);
-    renderFavorites();
-  }
-};
-el("btnClearFavVerse").onclick = ()=>{
-  if(confirm("Clear all favorite verses?")){
-    setFavVerse([]);
-    renderFavorites();
-  }
-};
+   "SHOW ANOTHER" (Verse/Aff)
+   This changes the seed (so daily pick shifts),
+   but still stays stable until you change it again.
+   ========================= */
+
+btnNewVerse.addEventListener("click", ()=>{
+  STATE.verseShuffleSeed = (STATE.verseShuffleSeed + 1) % 100000;
+  scheduleSave("New verse shown");
+  renderDailyVerse();
+});
+
+btnNewAff.addEventListener("click", ()=>{
+  STATE.affShuffleSeed = (STATE.affShuffleSeed + 1) % 100000;
+  scheduleSave("New affirmation shown");
+  renderDailyAff();
+});
 
 /* =========================
-   MANAGE LISTS
-========================= */
-function loadManageTextareas(){
-  const a = getAffirmations();
-  const v = getVerses();
-  el("affTextarea").value = a.join("\n");
-  el("verseTextarea").value = verseObjectsToLines(v);
-  el("affCount").textContent = `Current affirmations: ${a.length}`;
-  el("verseCount").textContent = `Current verses: ${v.length}`;
-}
+   EXPORT + HARD RESET
+   ========================= */
 
-function saveListsFromManage(){
-  // affirmations: dedupe + keep order
-  const affLines = uniqNonEmptyLines(el("affTextarea").value);
-  // verses: parse objects + remove empties + dedupe by ref+text
-  const verseObjsRaw = formatVerseLinesToObjects(el("verseTextarea").value)
-    .filter(v => (v.ref || "").trim().length);
-
-  const seen = new Set();
-  const verseObjs = [];
-  for(const v of verseObjsRaw){
-    const key = `${v.ref}—${v.text}`.replace(/\s+/g," ").trim().toLowerCase();
-    if(!seen.has(key)){ seen.add(key); verseObjs.push({ref:v.ref.trim(), text:(v.text||"").trim()}); }
-  }
-
-  if(affLines.length < 1){
-    alert("Affirmations list is empty. Paste at least 1 line.");
-    return;
-  }
-  if(verseObjs.length < 1){
-    alert("Verse list is empty. Paste at least 1 line.");
-    return;
-  }
-
-  localStorage.setItem(KEY_AFF_LIST, JSON.stringify(affLines));
-  localStorage.setItem(KEY_VERSE_LIST, JSON.stringify(verseObjs));
-
-  // reload state
-  AFFS = getAffirmations();
-  VERSES = getVerses();
-  idxAff = clamp(idxAff, 0, AFFS.length-1);
-  idxVerse = clamp(idxVerse, 0, VERSES.length-1);
-  saveIdx();
-  renderDaily();
-  loadManageTextareas();
-  alert("Saved.");
-}
-
-el("btnSaveLists").onclick = saveListsFromManage;
-el("btnSaveLists2").onclick = saveListsFromManage;
-
-el("btnResetAff").onclick = ()=>{
-  if(confirm("Reset affirmations to the built-in 365 list?")){
-    localStorage.removeItem(KEY_AFF_LIST);
-    AFFS = getAffirmations();
-    idxAff = (dayOfYear(new Date()) - 1) % AFFS.length;
-    saveIdx();
-    loadManageTextareas();
-    renderDaily();
-  }
-};
-el("btnResetVerse").onclick = ()=>{
-  if(confirm("Reset verses to the built-in KJV starter list?")){
-    localStorage.removeItem(KEY_VERSE_LIST);
-    VERSES = getVerses();
-    idxVerse = (dayOfYear(new Date()) - 1) % VERSES.length;
-    saveIdx();
-    loadManageTextareas();
-    renderDaily();
-  }
-};
-
-/* =========================
-   BACKUP / RESTORE
-========================= */
-el("btnExport").onclick = ()=>{
-  const payload = {
-    version: "wj_backup_v1",
-    exportedAt: new Date().toISOString(),
-    affirmationList: getAffirmations(),
-    verseList: getVerses(),
-    favoriteAffirmations: getFavAff(),
-    favoriteVerses: getFavVerse(),
-    idxAff: idxAff,
-    idxVerse: idxVerse
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+btnExport.addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify(STATE, null, 2)], { type:"application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "wellness-journal-backup.json";
+  a.download = `wellness-app-backup-${STATE.viewDate}.json`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
-};
-
-el("btnImport").onclick = ()=> el("importFile").click();
-
-el("importFile").addEventListener("change", async (e)=>{
-  const file = e.target.files && e.target.files[0];
-  if(!file) return;
-  const text = await file.text();
-  const data = safeParseJSON(text, null);
-  if(!data || data.version !== "wj_backup_v1"){
-    alert("That JSON doesn't look like a Wellness Journal backup file.");
-    return;
-  }
-  try{
-    if(Array.isArray(data.affirmationList) && data.affirmationList.length){
-      localStorage.setItem(KEY_AFF_LIST, JSON.stringify(data.affirmationList));
-    }
-    if(Array.isArray(data.verseList) && data.verseList.length){
-      localStorage.setItem(KEY_VERSE_LIST, JSON.stringify(data.verseList));
-    }
-    if(Array.isArray(data.favoriteAffirmations)){
-      setFavAff(data.favoriteAffirmations);
-    }
-    if(Array.isArray(data.favoriteVerses)){
-      setFavVerse(data.favoriteVerses);
-    }
-    if(Number.isFinite(data.idxAff)) localStorage.setItem(KEY_IDX_AFF, String(data.idxAff));
-    if(Number.isFinite(data.idxVerse)) localStorage.setItem(KEY_IDX_VERSE, String(data.idxVerse));
-    // refresh
-    AFFS = getAffirmations();
-    VERSES = getVerses();
-    idxAff = parseInt(localStorage.getItem(KEY_IDX_AFF)||"0",10);
-    idxVerse = parseInt(localStorage.getItem(KEY_IDX_VERSE)||"0",10);
-    renderDaily();
-    alert("Imported.");
-  } catch(err){
-    alert("Import failed.");
-  } finally {
-    e.target.value = "";
-  }
+  toast("Exported JSON");
 });
 
-el("btnFactoryReset").onclick = ()=>{
-  if(!confirm("Factory reset will delete ALL saved data for this app on this device. Continue?")) return;
-  [
-    KEY_AFF_LIST, KEY_VERSE_LIST, KEY_FAV_AFF, KEY_FAV_VERSE, KEY_IDX_AFF, KEY_IDX_VERSE
-  ].forEach(k=>localStorage.removeItem(k));
-  AFFS = getAffirmations();
-  VERSES = getVerses();
-  idxAff = (dayOfYear(new Date()) - 1) % AFFS.length;
-  idxVerse = (dayOfYear(new Date()) - 1) % VERSES.length;
-  saveIdx();
-  renderDaily();
-  alert("Reset complete.");
-};
+btnHardReset.addEventListener("click", ()=>{
+  const ok = confirm("This will permanently delete all saved data on this device. Continue?");
+  if(!ok) return;
+  localStorage.removeItem(STORE_KEY);
+  STATE = freshState();
+  currentDep = null; currentAnx = null;
+  setScaleSelected(depScale, -1);
+  setScaleSelected(anxScale, -1);
+  toast("All data deleted");
+  renderAll();
+  saveState();
+});
 
 /* =========================
-   INIT
-========================= */
-renderTodayPill();
-renderDaily();
+   UTIL
+   ========================= */
+
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* =========================
+   INITIAL RENDER
+   ========================= */
+
+renderAll();
+
+/* Optional: quick duplicate check in console */
+(function duplicateCheck(){
+  const seen = new Set();
+  const dups = [];
+  for(const v of KJV_VERSES_FEAR){
+    const k = v.ref.trim().toLowerCase();
+    if(seen.has(k)) dups.push(v.ref);
+    seen.add(k);
+  }
+  if(dups.length){
+    console.warn("Duplicate verse references:", dups);
+  }
+})();
 </script>
 </body>
 </html>
