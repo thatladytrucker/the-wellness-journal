@@ -1082,8 +1082,7 @@ let saveTimer = null;
 
 function saveState(showToastMsg){
   localStorage.setItem(STORE_KEY, JSON.stringify(STATE));
-  setSaveStatus("Saved");
-  if(showToastMsg) toast(showToastMsg);
+    if(showToastMsg) toast(showToastMsg);
 }
 function scheduleSave(showToastMsg){
   setSaveStatus("Saving…");
