@@ -1785,6 +1785,24 @@ renderAll();
   if(dups.length){
     console.warn("Duplicate verse references:", dups);
   }
+  // ===== CURRENT DATE LABEL (TOP PILL) =====
+function renderTodayLabel(){
+  const el = document.getElementById("todayLabel");
+  if(!el) return;
+
+  const now = new Date();
+  const formatted = now.toLocaleDateString(undefined, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+
+  el.textContent = formatted;
+}
+
+renderTodayLabel();
+
 })();
 </script>
   <button class="fabSave" id="btnSaveAll" title="Save">Save</button>
