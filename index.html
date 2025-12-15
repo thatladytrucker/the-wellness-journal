@@ -283,11 +283,11 @@
     <div class="topbar">
       <div class="brand">
         <h1>Wellness Journal</h1>
-        <div class="meta">
-          <span class="pill" id="liveDate">—</span>
-          <span class="pill" id="liveTime">—</span>
-          <span class="pill" id="saveStatus">Saved</span>
-        </div>
+        function setSaveStatus(txt){
+  const el = document.getElementById("saveStatus");
+  if(el) el.textContent = txt;
+}
+
       </div>
 
       <div class="controls">
