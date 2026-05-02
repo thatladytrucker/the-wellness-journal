@@ -1606,8 +1606,8 @@ $("saveAll").addEventListener("click", ()=>{
    INIT
    ========================= */
 function renderAll(){
+  $("streakDisplay").textContent = `Current Streak: ${calculateStreak()} Days 🔥`;
   setDayKey(currentKey);
-
   renderDailyVerse();
   renderDailyAffirm();
   renderJournal();
