@@ -39,9 +39,11 @@
   margin: 0 auto;
   padding: 14px 14px 90px;
 }
+
 header .wrap{
   padding-bottom: 14px;
 }
+
     .topbar{
       display:flex;
       gap:12px;
@@ -133,6 +135,7 @@ header .wrap{
     .btn.small{padding: 8px 10px; font-size: 12px; border-radius: 10px;}
     .grid2{display:grid; grid-template-columns: 1fr; gap:10px;}
     @media (min-width: 640px){ .grid2{grid-template-columns: 1fr 1fr;} }
+
     /* rating buttons */
     .rating{
       display:flex; flex-wrap:wrap; gap:8px;
@@ -154,6 +157,7 @@ header .wrap{
       outline: 2px solid rgba(37,99,235,0.12);
       background: rgba(37,99,235,0.08);
     }
+
     /* goals */
     .list{display:flex; flex-direction:column; gap:10px;}
     .item{
@@ -191,6 +195,7 @@ header .wrap{
     .status{font-size: 13px; color: var(--muted);}
     .status b{color: var(--ink);}
     .hidden{display:none !important;}
+
     /* modal */
     .modalback{
       position: fixed; inset:0;
@@ -230,6 +235,7 @@ header .wrap{
     }
   </style>
 </head>
+
 <body>
 <header>
   <div class="wrap">
@@ -237,10 +243,12 @@ header .wrap{
       <div class="brand">
         <h1>Wellness Journal App</h1>
       </div>
+
       <div class="now">
         <div class="pill" id="nowPill">—</div>
       </div>
     </div>
+
     <div class="tabs" role="tablist" aria-label="Sections">
       <button class="tabbtn active" id="tabDaily" type="button">Daily</button>
       <button class="tabbtn" id="tabReview" type="button">Review / History</button>
@@ -249,9 +257,13 @@ header .wrap{
     </div>
   </div>
 </header>
+
+
 <div class="wrap">
+
   <!-- DAILY VIEW -->
   <section id="viewDaily" class="row">
+
     <div class="card">
       <h2>Daily Bible Verse</h2>
       
@@ -266,6 +278,7 @@ header .wrap{
       </div>
       
     </div>
+
     <div class="card">
       <h2>Daily Journal</h2>
       ="hint">Free-form entry. Add to it all day and save anytime.</p>
@@ -276,22 +289,28 @@ header .wrap{
         <button class="btn small danger" type="button" id="clearJournal">Clear (today only)</button>
       </div>
     </div>
+
     <div class="card">
       <h2>Primary Goals</h2>
       <p class="hint">Start with “One small intention.” Add more. Goals roll over until completed.</p>
+
       <label for="newGoal">One small intention</label>
       <input id="newGoal" type="text" placeholder="Example: Drink water • Call doctor • 10-minute walk" />
+
       <div class="btnrow">
         <button class="btn good" type="button" id="addGoal">+ Add goal</button>
         <button class="btn small danger" type="button" id="clearCompletedGoals">Remove completed (optional)</button>
       </div>
+
       <div class="divider"></div>
       <div class="list" id="goalsList"></div>
       <div class="hint" id="goalsEmpty">No goals yet. Add one above.</div>
     </div>
+
     <div class="card">
       <h2>Mental Health Check-ins</h2>
       <p class="hint">Add as many check-ins as you need. </p>
+
       <div class="grid2">
         <div>
           <label>Overall Depression (0–10)</label>
@@ -302,16 +321,20 @@ header .wrap{
           <div class="rating" id="anxRating"></div>
         </div>
       </div>
+
       <label for="moodReason">Optional reason / notes</label>
       <input id="moodReason" type="text" placeholder="Example: work stress, poor sleep, argument, pain, etc." />
+
       <div class="btnrow">
         <button class="btn primary" type="button" id="addCheckin">+ Add check-in</button>
         <button class="btn small danger" type="button" id="clearTodayCheckins">Clear today’s check-ins</button>
       </div>
+
       <div class="divider"></div>
       <div class="list" id="checkinsList"></div>
       <div class="hint" id="checkinsEmpty">No check-ins yet today.</div>
     </div>
+
     <div class="card">
       <h2>Daily Affirmation</h2>
       
@@ -325,70 +348,90 @@ header .wrap{
         <button class="btn small" type="button" id="copyAffirm">Copy</button>
       </div>
     </div>
+
     <footer>© 2025 — Personal offline tracker. Data stays on this device unless you export it.</footer>
   </section>
+
   <!-- REVIEW / HISTORY -->
   <section id="viewReview" class="row hidden">
     <div class="card">
       <h2>Review / History</h2>
       <p class="hint">Load another day to review journal, goals, and check-ins.</p>
+
       <label for="pickDate">Choose a date</label>
       <input id="pickDate" type="date" />
+
       <div class="btnrow">
         <button class="btn primary" type="button" id="loadPickedDate">Load date</button>
         <button class="btn" type="button" id="loadToday">Back to today</button>
       </div>
+
       <div class="divider"></div>
       <div class="item">
         <div class="meta mono" id="reviewDayKey">—</div>
         <div class="meta" style="margin-top:6px;">Journal</div>
         <div id="reviewJournal" style="white-space:pre-wrap; margin-top:6px;">—</div>
       </div>
+
       <div class="divider"></div>
       <div class="meta" style="margin-bottom:8px;">Goals (includes rollover goals)</div>
       <div class="list" id="reviewGoals"></div>
+
       <div class="divider"></div>
       <div class="meta" style="margin-bottom:8px;">Check-ins</div>
       <div class="list" id="reviewCheckins"></div>
     </div>
   </section>
+
   <!-- APPOINTMENTS / FOLLOW-UPS -->
   <section id="viewAppts" class="row hidden">
     <div class="card">
       <h2>Appointments</h2>
       <p class="hint">Add appointments and review them anytime. </p>
+
       <label for="apptTitle">Title</label>
       <input id="apptTitle" type="text" placeholder="Example: Therapist intake • Dentist • VR counselor" />
+
       <label for="apptWhen">Date & time</label>
       <input id="apptWhen" type="datetime-local" />
+
       <label for="apptWhere">Location</label>
       <input id="apptWhere" type="text" placeholder="Address or virtual link note" />
+
       <label for="apptNotes">Notes</label>
       <textarea id="apptNotes" placeholder="Questions, paperwork, reminders..."></textarea>
+
       <div class="btnrow">
         <button class="btn good" type="button" id="addAppt">+ Add appointment</button>
         <button class="btn small danger" type="button" id="clearApptForm">Clear form</button>
       </div>
+
       <div class="divider"></div>
       <div class="list" id="apptsList"></div>
       <div class="hint" id="apptsEmpty">No appointments saved yet.</div>
     </div>
+
     <div class="card">
       <h2>Follow-ups</h2>
       <p class="hint">Track contacts and notes for follow-ups.</p>
+
       <label for="fuName">Contact name</label>
       <input id="fuName" type="text" placeholder="Example: Dr. Lane • HR rep • Caseworker" />
+
       <label for="fuNotes">Follow-up notes</label>
       <textarea id="fuNotes" placeholder="What you need to ask, what they said, next step..."></textarea>
+
       <div class="btnrow">
         <button class="btn good" type="button" id="addFU">+ Add follow-up</button>
         <button class="btn small danger" type="button" id="clearFUForm">Clear form</button>
       </div>
+
       <div class="divider"></div>
       <div class="list" id="fuList"></div>
       <div class="hint" id="fuEmpty">No follow-ups saved yet.</div>
     </div>
   </section>
+
   <!-- BACKUP -->
   <section id="viewBackup" class="row hidden">
     <div class="card">
@@ -407,7 +450,9 @@ header .wrap{
       </div>
     </div>
   </section>
+
 </div>
+
 <div class="savebar" role="region" aria-label="Save bar">
   <div class="inner">
     <div class="status" id="saveStatus"><b>Saved.</b> You can close and come back anytime.</div>
@@ -416,6 +461,7 @@ header .wrap{
     </div>
   </div>
 </div>
+
 <!-- Modal (used for export download text if needed) -->
 <div class="modalback" id="modalBack" aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -429,10 +475,12 @@ header .wrap{
     <div id="modalBody"></div>
   </div>
 </div>
+
 <script>
 /* =========================
    DATA: Verses + Affirmations
    ========================= */
+
 /* Verses: cleaned to items that include an actual quoted verse in your paste.
    (You can add more later in the same format.)
 */
@@ -490,11 +538,13 @@ const VERSES = [
   { ref: "John 12:15", text: "Do not be afraid, Daughter Zion." },
   { ref: "Acts 27:24", text: "Do not be afraid, Paul." },
   { ref: "Revelation 1:17", text: "Do not be afraid. I am the First and the Last." },
+
   /* A few extra “strength/hope/anxiety” items from your paste that included full lines */
   { ref: "Psalm 56:3", text: "When I am afraid, I put my trust in you." },
   { ref: "2 Timothy 1:7", text: "For God has not given us a spirit of fear, but of power and of love and of a sound mind." },
   { ref: "1 Peter 5:7", text: "Cast all your anxiety on him because he cares for you." }
 ];
+
 /* Your 365 affirmations (as provided). */
 const AFFIRMATIONS = [
   "I welcome wisdom into my life.",
@@ -698,8 +748,8 @@ const AFFIRMATIONS = [
   "I choose peaceful responses instead of angry reactions.",
   "I speak with grace and truth, knowing my words carry weight.",
   "I rely on God’s guidance, not my own understanding.",
-  "I make decisions that reflect integrity and sound judgment.
-"I stay patient because God works everything together in His time.",
+  "I make decisions that reflect integrity and sound judgment.",
+  "I stay patient because God works everything together in His time.",
   "I pursue wisdom because it is better than wealth.",
   "I guard my spirit so pride does not lead me into destruction.",
   "I walk confidently because the Lord directs my steps.",
@@ -863,6 +913,7 @@ const AFFIRMATIONS = [
   "I walk in confidence because God equips me for every season.",
   "I live in a way that reflects grace, purpose, and resilience."
 ];
+
 /* =========================
    STORAGE MODEL
    =========================
@@ -871,6 +922,7 @@ const AFFIRMATIONS = [
      A goal "rolls over" because it remains visible until completed.
 */
 const STORE_KEY = "wellness_app_v1_white_design";
+
 function loadStore(){
   try{
     const raw = localStorage.getItem(STORE_KEY);
@@ -892,10 +944,12 @@ function loadStore(){
 function saveStore(store){
   localStorage.setItem(STORE_KEY, JSON.stringify(store));
 }
+
 /* =========================
    HELPERS
    ========================= */
 const $ = (id)=>document.getElementById(id);
+
 function pad2(n){ return String(n).padStart(2,"0"); }
 function toDayKey(d){
   const y = d.getFullYear();
@@ -937,6 +991,7 @@ async function copyText(t){
     setSavedStatus("<b>Copied.</b> Saved stays the same.");
   }
 }
+
 /* =========================
    APP STATE
    ========================= */
@@ -944,12 +999,14 @@ let store = loadStore();
 let currentDate = new Date();
 let currentKey = toDayKey(currentDate);
 let reviewKey = currentKey;
+
 function ensureDay(key){
   if(!store.days[key]){
     store.days[key] = { journal:"", checkins:[], verseOffset:0, affirmOffset:0 };
   }
   return store.days[key];
 }
+
 function renderClock(){
   const d = new Date();
   const opts = { weekday:"short", year:"numeric", month:"short", day:"2-digit" };
@@ -957,10 +1014,12 @@ function renderClock(){
   const timeStr = d.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit", second:"2-digit" });
   $("nowPill").textContent = `${dateStr} • ${timeStr}`;
 }
+
 function setDayKey(newKey){
   currentKey = newKey;
   $("dayKeyPill").textContent = `Day: ${currentKey}`;
 }
+
 function getDailyVerseIndex(key){
   const d = new Date(key+"T00:00:00");
   const base = dayOfYear(d) - 1; // 0-based
@@ -975,6 +1034,7 @@ function getDailyAffirmIndex(key){
   const offset = Number(day.affirmOffset||0);
   return (base + offset + AFFIRMATIONS.length) % AFFIRMATIONS.length;
 }
+
 function renderDailyVerse(){
   const idx = getDailyVerseIndex(currentKey);
   const v = VERSES[idx];
@@ -986,10 +1046,12 @@ function renderDailyAffirm(){
   $("affirmDay").textContent = `Affirmation (Day-of-year)  (${idx+1}/${AFFIRMATIONS.length})`;
   $("affirmText").textContent = AFFIRMATIONS[idx] || "—";
 }
+
 function renderJournal(){
   const day = ensureDay(currentKey);
   $("journal").value = day.journal || "";
 }
+
 /* Goals: always show incomplete first, then completed */
 function renderGoals(){
   const list = $("goalsList");
@@ -1000,7 +1062,9 @@ function renderGoals(){
     if(ac !== bc) return ac - bc;
     return (a.createdOn||"").localeCompare(b.createdOn||"");
   });
+
   $("goalsEmpty").classList.toggle("hidden", goals.length>0);
+
   for(const g of goals){
     const done = !!g.completedOn;
     const el = document.createElement("div");
@@ -1022,6 +1086,7 @@ function renderGoals(){
     `;
     list.appendChild(el);
   }
+
   // wire up checkboxes + delete buttons
   list.querySelectorAll("[data-goalcheck]").forEach(cb=>{
     cb.addEventListener("change",(e)=>{
@@ -1044,6 +1109,7 @@ function renderGoals(){
     });
   });
 }
+
 /* Ratings UI */
 function buildRating(containerId, onSelect){
   const c = $(containerId);
@@ -1073,15 +1139,18 @@ function buildRating(containerId, onSelect){
     }
   };
 }
+
 let depPick = null;
 let anxPick = null;
 let depUI, anxUI;
+
 function renderCheckins(){
   const day = ensureDay(currentKey);
   const list = $("checkinsList");
   list.innerHTML = "";
   const arr = day.checkins || [];
   $("checkinsEmpty").classList.toggle("hidden", arr.length>0);
+
   arr.slice().reverse().forEach((c, idxFromEnd)=>{
     const idx = arr.length - 1 - idxFromEnd;
     const el = document.createElement("div");
@@ -1102,6 +1171,7 @@ function renderCheckins(){
     `;
     list.appendChild(el);
   });
+
   list.querySelectorAll("[data-checkdel]").forEach(btn=>{
     btn.addEventListener("click",()=>{
       const i = Number(btn.getAttribute("data-checkdel"));
@@ -1113,12 +1183,14 @@ function renderCheckins(){
     });
   });
 }
+
 /* Appointments + Follow-ups */
 function renderAppts(){
   const list = $("apptsList");
   list.innerHTML = "";
   const appts = [...store.appts].sort((a,b)=> (a.when||"").localeCompare(b.when||""));
   $("apptsEmpty").classList.toggle("hidden", appts.length>0);
+
   for(const a of appts){
     const el = document.createElement("div");
     el.className = "item";
@@ -1136,6 +1208,7 @@ function renderAppts(){
     `;
     list.appendChild(el);
   }
+
   list.querySelectorAll("[data-apptdel]").forEach(btn=>{
     btn.addEventListener("click",()=>{
       const id = btn.getAttribute("data-apptdel");
@@ -1146,11 +1219,13 @@ function renderAppts(){
     });
   });
 }
+
 function renderFUs(){
   const list = $("fuList");
   list.innerHTML = "";
   const fus = [...store.followups].sort((a,b)=> (b.createdAt||"").localeCompare(a.createdAt||""));
   $("fuEmpty").classList.toggle("hidden", fus.length>0);
+
   for(const f of fus){
     const el = document.createElement("div");
     el.className = "item";
@@ -1166,6 +1241,7 @@ function renderFUs(){
     `;
     list.appendChild(el);
   }
+
   list.querySelectorAll("[data-fudel]").forEach(btn=>{
     btn.addEventListener("click",()=>{
       const id = btn.getAttribute("data-fudel");
@@ -1176,11 +1252,13 @@ function renderFUs(){
     });
   });
 }
+
 /* Review page */
 function renderReview(){
   const day = ensureDay(reviewKey);
   $("reviewDayKey").textContent = `Loaded day: ${reviewKey}`;
   $("reviewJournal").textContent = day.journal ? day.journal : "—";
+
   // goals show global
   const gWrap = $("reviewGoals");
   gWrap.innerHTML = "";
@@ -1206,6 +1284,7 @@ function renderReview(){
       gWrap.appendChild(el);
     }
   }
+
   // checkins for that day
   const cWrap = $("reviewCheckins");
   cWrap.innerHTML = "";
@@ -1224,6 +1303,7 @@ function renderReview(){
     }
   }
 }
+
 /* =========================
    TAB NAV
    ========================= */
@@ -1242,10 +1322,12 @@ function setTab(name){
   store.ui.lastTab = name;
   saveStore(store);
 }
+
 $("tabDaily").addEventListener("click",()=>setTab("Daily"));
 $("tabReview").addEventListener("click",()=>setTab("Review"));
 $("tabAppts").addEventListener("click",()=>setTab("Appts"));
 $("tabBackup").addEventListener("click",()=>setTab("Backup"));
+
 /* =========================
    EVENTS: Daily Verse + Affirmation
    ========================= */
@@ -1268,6 +1350,7 @@ $("copyVerse").addEventListener("click",()=>{
   const v = VERSES[idx];
   copyText(`${v.ref} — ${v.text}`);
 });
+
 $("prevAffirm").addEventListener("click",()=>{
   const day = ensureDay(currentKey);
   day.affirmOffset = (Number(day.affirmOffset||0) - 1);
@@ -1286,6 +1369,7 @@ $("copyAffirm").addEventListener("click",()=>{
   const idx = getDailyAffirmIndex(currentKey);
   copyText(AFFIRMATIONS[idx] || "");
 });
+
 /* =========================
    Journal
    ========================= */
@@ -1307,6 +1391,7 @@ $("clearJournal").addEventListener("click",()=>{
   saveStore(store);
   setSavedStatus("<b>Saved.</b> Journal cleared.");
 });
+
 /* =========================
    Goals
    ========================= */
@@ -1330,6 +1415,7 @@ $("clearCompletedGoals").addEventListener("click", ()=>{
   renderGoals();
   setSavedStatus("<b>Saved.</b> Completed goals removed.");
 });
+
 /* =========================
    Check-ins
    ========================= */
@@ -1359,6 +1445,7 @@ $("clearTodayCheckins").addEventListener("click", ()=>{
   renderCheckins();
   setSavedStatus("<b>Saved.</b> Today’s check-ins cleared.");
 });
+
 /* =========================
    Appointments + Follow-ups
    ========================= */
@@ -1367,6 +1454,7 @@ $("addAppt").addEventListener("click", ()=>{
   const when = $("apptWhen").value;
   const where = $("apptWhere").value.trim();
   const notes = $("apptNotes").value.trim();
+
   if(!title && !when && !where && !notes){
     alert("Add at least a title or a date/time.");
     return;
@@ -1382,6 +1470,7 @@ $("clearApptForm").addEventListener("click", ()=>{
   $("apptWhere").value = "";
   $("apptNotes").value = "";
 });
+
 $("addFU").addEventListener("click", ()=>{
   const name = $("fuName").value.trim();
   const notes = $("fuNotes").value.trim();
@@ -1398,6 +1487,7 @@ $("clearFUForm").addEventListener("click", ()=>{
   $("fuName").value = "";
   $("fuNotes").value = "";
 });
+
 /* =========================
    Review / History
    ========================= */
@@ -1415,6 +1505,7 @@ $("loadToday").addEventListener("click", ()=>{
   reviewKey = currentKey;
   renderReview();
 });
+
 /* =========================
    Backup
    ========================= */
@@ -1432,6 +1523,7 @@ $("closeModal").addEventListener("click", closeModal);
 document.addEventListener("keydown",(e)=>{
   if(e.key==="Escape") closeModal();
 });
+
 $("exportBtn").addEventListener("click", ()=>{
   const data = JSON.stringify(store, null, 2);
   // download as file
@@ -1446,6 +1538,7 @@ $("exportBtn").addEventListener("click", ()=>{
   URL.revokeObjectURL(url);
   setSavedStatus("<b>Exported.</b> Backup file downloaded.");
 });
+
 $("importFile").addEventListener("change", async (e)=>{
   const file = e.target.files && e.target.files[0];
   if(!file) return;
@@ -1468,15 +1561,17 @@ $("importFile").addEventListener("change", async (e)=>{
     e.target.value = "";
   }
 });
+
 $("resetAll").addEventListener("click", ()=>{
   const ok = confirm("Reset ALL data? This cannot be undone.");
   if(!ok) return;
-  localStorage.removeItem(STORE_KEY); 
-store = loadStore();
+  localStorage.removeItem(STORE_KEY);
+  store = loadStore();
   ensureDay(currentKey);
   renderAll();
   setSavedStatus("<b>Reset complete.</b> All data cleared.");
 });
+
 /* =========================
    Save button
    ========================= */
@@ -1485,11 +1580,13 @@ $("saveAll").addEventListener("click", ()=>{
   saveStore(store);
   setSavedStatus("<b>Saved.</b> Everything is stored on this device.");
 });
+
 /* =========================
    INIT
    ========================= */
 function renderAll(){
   setDayKey(currentKey);
+
   renderDailyVerse();
   renderDailyAffirm();
   renderJournal();
@@ -1497,25 +1594,29 @@ function renderAll(){
   renderCheckins();
   renderAppts();
   renderFUs();
+
   // review init
   $("pickDate").value = currentKey;
   reviewKey = currentKey;
   renderReview();
+
   // restore tab
   const t = store.ui && store.ui.lastTab ? store.ui.lastTab : "Daily";
   setTab(t);
 }
+
 (function init(){
   // clock
   renderClock();
   setInterval(renderClock, 1000);
+
   // rating UIs
   depUI = buildRating("depRating", (v)=>{ depPick = v; });
   anxUI = buildRating("anxRating", (v)=>{ anxPick = v; });
+
   ensureDay(currentKey);
   renderAll();
 })();
 </script>
 </body>
 </html>
-
