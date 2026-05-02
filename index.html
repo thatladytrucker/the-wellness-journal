@@ -136,22 +136,31 @@ header .wrap{
     .grid2{display:grid; grid-template-columns: 1fr; gap:10px;}
     @media (min-width: 640px){ .grid2{grid-template-columns: 1fr 1fr;} }
 
-    /* rating buttons */
-    .rating{
-      display:flex; flex-wrap:wrap; gap:8px;
-      padding: 8px;
-      background: rgba(17,24,39,0.02);
-      border: 1px dashed var(--line);
-      border-radius: 14px;
-    }
-    .ratebtn{
-      width: 42px; height: 36px;
-      border-radius: 12px;
-      border:1px solid var(--line);
-      background:#fff;
-      cursor:pointer;
-      font-weight: 800;
-    }
+   /* rating buttons */
+.rating-container {
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 8px; 
+  margin: 10px 0;
+}
+.ratebtn {
+  flex: 1;
+  min-width: 40px; 
+  height: 40px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ratebtn.selected {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
     .ratebtn.active{
       border-color: rgba(37,99,235,0.45);
       outline: 2px solid rgba(37,99,235,0.12);
