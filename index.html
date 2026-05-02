@@ -1570,13 +1570,9 @@ $("importFile").addEventListener("change", async (e)=>{
 $("resetAll").addEventListener("click", ()=>{
   const ok = confirm("Reset ALL data? This cannot be undone.");
   if(!ok) return;
-  localStorage.removeItem(STORE_KEY);
-  store = loadStore();
-  ensureDay(currentKey);
-  renderAll();
-  setSavedStatus("<b>Reset complete.</b> All data cleared.");
+localStorage.removeItem(STORE_KEY);
+location.reload();  
 });
-
 /* =========================
    Save button
    ========================= */
