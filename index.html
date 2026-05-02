@@ -485,6 +485,493 @@ header .wrap{
    (You can add more later in the same format.)
 */
 const VERSES = [
+  <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wellness Journal App (Offline)</title>
+  <meta name="theme-color" content="#f7f7fb" />
+  <style>
+    :root{
+      --bg:#f7f7fb;
+      --card:#ffffff;
+      --ink:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --accent:#2563eb;
+      --accent2:#16a34a;
+      --warn:#f59e0b;
+      --danger:#dc2626;
+      --shadow: 0 10px 24px rgba(17,24,39,0.08);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header{
+      position: sticky;
+      top:0;
+      z-index: 10;
+      background: rgba(247,247,251,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+   .wrap{
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 14px 14px 90px;
+}
+
+header .wrap{
+  padding-bottom: 14px;
+}
+
+    .topbar{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px 0;
+    }
+    .brand{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .brand h1{margin:0; font-size: 18px; letter-spacing: .2px;}
+    .brand .sub{color:var(--muted); font-size: 13px;}
+    .now{
+      text-align:right;
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(17,24,39,0.06);
+      font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .tabs{
+      display:flex; gap:10px; flex-wrap:wrap;
+      padding: 10px 0 14px;
+    }
+    .tabbtn{
+      appearance:none; border:1px solid var(--line);
+      background:#fff; color:var(--ink);
+      padding:10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight: 600;
+      font-size: 13px;
+      box-shadow: 0 4px 10px rgba(17,24,39,0.05);
+    }
+    .tabbtn.active{border-color: rgba(37,99,235,0.35); outline: 2px solid rgba(37,99,235,0.12);}
+    .row{display:grid; grid-template-columns: 1fr; gap:14px;}
+    @media (min-width: 860px){
+      .row.two{grid-template-columns: 1.1fr .9fr;}
+      .row.two > .card{min-height: 210px;}
+    }
+    .card{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .card h2{
+      margin:0 0 6px;
+      font-size: 16px;
+    }
+    .hint{margin:0 0 10px; color:var(--muted); font-size: 13px; line-height: 1.35;}
+    .divider{height:1px; background: var(--line); margin: 12px 0;}
+    label{display:block; font-size: 13px; color: var(--muted); margin: 10px 0 6px;}
+    input[type="text"], input[type="datetime-local"], textarea{
+      width:100%;
+      padding: 10px 12px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      font-size: 14px;
+      outline:none;
+      background:#fff;
+    }
+    textarea{min-height: 120px; resize: vertical;}
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px;}
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:#fff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .btn.primary{border-color: rgba(37,99,235,0.35); background: rgba(37,99,235,0.08);}
+    .btn.good{border-color: rgba(22,163,74,0.35); background: rgba(22,163,74,0.08);}
+    .btn.warn{border-color: rgba(245,158,11,0.45); background: rgba(245,158,11,0.08);}
+    .btn.danger{border-color: rgba(220,38,38,0.35); background: rgba(220,38,38,0.08);}
+    .btn.small{padding: 8px 10px; font-size: 12px; border-radius: 10px;}
+    .grid2{display:grid; grid-template-columns: 1fr; gap:10px;}
+    @media (min-width: 640px){ .grid2{grid-template-columns: 1fr 1fr;} }
+
+    /* rating buttons */
+    .rating{
+      display:flex; flex-wrap:wrap; gap:8px;
+      padding: 8px;
+      background: rgba(17,24,39,0.02);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+    }
+    .ratebtn{
+      width: 42px; height: 36px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background:#fff;
+      cursor:pointer;
+      font-weight: 800;
+    }
+    .ratebtn.active{
+      border-color: rgba(37,99,235,0.45);
+      outline: 2px solid rgba(37,99,235,0.12);
+      background: rgba(37,99,235,0.08);
+    }
+
+    /* goals */
+    .list{display:flex; flex-direction:column; gap:10px;}
+    .item{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 10px;
+      background:#fff;
+    }
+    .itemtop{
+      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
+    }
+    .itemleft{
+      display:flex; gap:10px; align-items:flex-start; flex:1;
+    }
+    .itemleft input[type="checkbox"]{margin-top: 3px; transform: scale(1.2);}
+    .meta{color:var(--muted); font-size: 12px; margin-top: 3px;}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
+    .savebar{
+      position: fixed;
+      left:0; right:0; bottom:0;
+      border-top: 1px solid var(--line);
+      background: rgba(247,247,251,0.92);
+      backdrop-filter: blur(10px);
+      padding: 10px 12px;
+      z-index: 20;
+    }
+    .savebar .inner{
+      max-width: 980px;
+      margin: 0 auto;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .status{font-size: 13px; color: var(--muted);}
+    .status b{color: var(--ink);}
+    .hidden{display:none !important;}
+
+    /* modal */
+    .modalback{
+      position: fixed; inset:0;
+      background: rgba(17,24,39,0.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 14px;
+      z-index: 50;
+    }
+    .modal{
+      width: min(860px, 100%);
+      max-height: 90vh;
+      overflow:auto;
+      background:#fff;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 50px rgba(17,24,39,0.25);
+      padding: 14px;
+    }
+    .modalhead{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    .modalhead h3{margin:0; font-size: 16px;}
+    .kbd{font-size: 12px; color: var(--muted);}
+    footer{
+      color: var(--muted);
+      text-align:center;
+      font-size: 12px;
+      margin-top: 18px;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <h1>Wellness Journal App</h1>
+      </div>
+
+      <div class="now">
+        <div class="pill" id="nowPill">—</div>
+      </div>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Sections">
+      <button class="tabbtn active" id="tabDaily" type="button">Daily</button>
+      <button class="tabbtn" id="tabReview" type="button">Review / History</button>
+      <button class="tabbtn" id="tabAppts" type="button">Appointments & Follow-ups</button>
+      <button class="tabbtn" id="tabBackup" type="button">Backup</button>
+    </div>
+  </div>
+</header>
+
+
+<div class="wrap">
+
+  <!-- DAILY VIEW -->
+  <section id="viewDaily" class="row">
+
+    <div class="card">
+      <h2>Daily Bible Verse</h2>
+      
+      <div class="item">
+        <div class="meta mono" id="verseRef">—</div>
+        <div style="margin-top:6px; font-size:16px; line-height:1.4" id="verseText">—</div>
+      </div>
+      <div class="btnrow">
+        <button class="btn small" type="button" id="prevVerse">◀ Prev</button>
+        <button class="btn small" type="button" id="nextVerse">Next ▶</button>
+        <button class="btn small" type="button" id="copyVerse">Copy</button>
+      </div>
+      
+    </div>
+
+    <div class="card">
+      <h2>Daily Journal</h2>
+      ="hint">Free-form entry. Add to it all day and save anytime.</p>
+      <label for="journal">Journal entry</label>
+      <textarea id="journal" placeholder="Write what you want to remember..."></textarea>
+      <div class="btnrow">
+        <button class="btn small" type="button" id="copyJournal">Copy</button>
+        <button class="btn small danger" type="button" id="clearJournal">Clear (today only)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Primary Goals</h2>
+      <p class="hint">Start with “One small intention.” Add more. Goals roll over until completed.</p>
+
+      <label for="newGoal">One small intention</label>
+      <input id="newGoal" type="text" placeholder="Example: Drink water • Call doctor • 10-minute walk" />
+
+      <div class="btnrow">
+        <button class="btn good" type="button" id="addGoal">+ Add goal</button>
+        <button class="btn small danger" type="button" id="clearCompletedGoals">Remove completed (optional)</button>
+      </div>
+
+      <div class="divider"></div>
+      <div class="list" id="goalsList"></div>
+      <div class="hint" id="goalsEmpty">No goals yet. Add one above.</div>
+    </div>
+
+    <div class="card">
+      <h2>Mental Health Check-ins</h2>
+      <p class="hint">Add as many check-ins as you need. </p>
+
+      <div class="grid2">
+        <div>
+          <label>Overall Depression (0–10)</label>
+          <div class="rating" id="depRating"></div>
+        </div>
+        <div>
+          <label>Overall Anxiety (0–10)</label>
+          <div class="rating" id="anxRating"></div>
+        </div>
+      </div>
+
+      <label for="moodReason">Optional reason / notes</label>
+      <input id="moodReason" type="text" placeholder="Example: work stress, poor sleep, argument, pain, etc." />
+
+      <div class="btnrow">
+        <button class="btn primary" type="button" id="addCheckin">+ Add check-in</button>
+        <button class="btn small danger" type="button" id="clearTodayCheckins">Clear today’s check-ins</button>
+      </div>
+
+      <div class="divider"></div>
+      <div class="list" id="checkinsList"></div>
+      <div class="hint" id="checkinsEmpty">No check-ins yet today.</div>
+    </div>
+
+    <div class="card">
+      <h2>Daily Affirmation</h2>
+      
+      <div class="item">
+        <div class="meta mono" id="affirmDay">Affirmation —</div>
+        <div style="margin-top:6px; font-size:16px; line-height:1.4" id="affirmText">—</div>
+      </div>
+      <div class="btnrow">
+        <button class="btn small" type="button" id="prevAffirm">◀ Prev</button>
+        <button class="btn small" type="button" id="nextAffirm">Next ▶</button>
+        <button class="btn small" type="button" id="copyAffirm">Copy</button>
+      </div>
+    </div>
+
+    <footer>© 2025 — Personal offline tracker. Data stays on this device unless you export it.</footer>
+  </section>
+
+  <!-- REVIEW / HISTORY -->
+  <section id="viewReview" class="row hidden">
+    <div class="card">
+      <h2>Review / History</h2>
+      <p class="hint">Load another day to review journal, goals, and check-ins.</p>
+
+      <label for="pickDate">Choose a date</label>
+      <input id="pickDate" type="date" />
+
+      <div class="btnrow">
+        <button class="btn primary" type="button" id="loadPickedDate">Load date</button>
+        <button class="btn" type="button" id="loadToday">Back to today</button>
+      </div>
+
+      <div class="divider"></div>
+      <div class="item">
+        <div class="meta mono" id="reviewDayKey">—</div>
+        <div class="meta" style="margin-top:6px;">Journal</div>
+        <div id="reviewJournal" style="white-space:pre-wrap; margin-top:6px;">—</div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="meta" style="margin-bottom:8px;">Goals (includes rollover goals)</div>
+      <div class="list" id="reviewGoals"></div>
+
+      <div class="divider"></div>
+      <div class="meta" style="margin-bottom:8px;">Check-ins</div>
+      <div class="list" id="reviewCheckins"></div>
+    </div>
+  </section>
+
+  <!-- APPOINTMENTS / FOLLOW-UPS -->
+  <section id="viewAppts" class="row hidden">
+    <div class="card">
+      <h2>Appointments</h2>
+      <p class="hint">Add appointments and review them anytime. </p>
+
+      <label for="apptTitle">Title</label>
+      <input id="apptTitle" type="text" placeholder="Example: Therapist intake • Dentist • VR counselor" />
+
+      <label for="apptWhen">Date & time</label>
+      <input id="apptWhen" type="datetime-local" />
+
+      <label for="apptWhere">Location</label>
+      <input id="apptWhere" type="text" placeholder="Address or virtual link note" />
+
+      <label for="apptNotes">Notes</label>
+      <textarea id="apptNotes" placeholder="Questions, paperwork, reminders..."></textarea>
+
+      <div class="btnrow">
+        <button class="btn good" type="button" id="addAppt">+ Add appointment</button>
+        <button class="btn small danger" type="button" id="clearApptForm">Clear form</button>
+      </div>
+
+      <div class="divider"></div>
+      <div class="list" id="apptsList"></div>
+      <div class="hint" id="apptsEmpty">No appointments saved yet.</div>
+    </div>
+
+    <div class="card">
+      <h2>Follow-ups</h2>
+      <p class="hint">Track contacts and notes for follow-ups.</p>
+
+      <label for="fuName">Contact name</label>
+      <input id="fuName" type="text" placeholder="Example: Dr. Lane • HR rep • Caseworker" />
+
+      <label for="fuNotes">Follow-up notes</label>
+      <textarea id="fuNotes" placeholder="What you need to ask, what they said, next step..."></textarea>
+
+      <div class="btnrow">
+        <button class="btn good" type="button" id="addFU">+ Add follow-up</button>
+        <button class="btn small danger" type="button" id="clearFUForm">Clear form</button>
+      </div>
+
+      <div class="divider"></div>
+      <div class="list" id="fuList"></div>
+      <div class="hint" id="fuEmpty">No follow-ups saved yet.</div>
+    </div>
+  </section>
+
+  <!-- BACKUP -->
+  <section id="viewBackup" class="row hidden">
+    <div class="card">
+      <h2>Backup</h2>
+      <p class="hint">Export your data (JSON) or import it back later. Works offline.</p>
+      <div class="btnrow">
+        <button class="btn primary" type="button" id="exportBtn">Export JSON</button>
+        <label class="btn" for="importFile" style="cursor:pointer;">Import JSON</label>
+        <input id="importFile" type="file" accept="application/json" class="hidden" />
+        <button class="btn danger" type="button" id="resetAll">Reset ALL data</button>
+      </div>
+      <div class="divider"></div>
+      <div class="item">
+        <div class="meta">Exported file includes:</div>
+        <div class="meta" style="margin-top:6px;">Daily journal entries • goals (including rollover) • check-ins • appointments • follow-ups • manual verse/affirmation offsets</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="savebar" role="region" aria-label="Save bar">
+  <div class="inner">
+    <div class="status" id="saveStatus"><b>Saved.</b> You can close and come back anytime.</div>
+    <div class="btnrow" style="margin:0;">
+      <button class="btn primary" type="button" id="saveAll">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal (used for export download text if needed) -->
+<div class="modalback" id="modalBack" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modalhead">
+      <div>
+        <h3 id="modalTitle">—</h3>
+        <div class="kbd">Press Esc to close</div>
+      </div>
+      <button class="btn small" type="button" id="closeModal">Close</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* =========================
+   DATA: Verses + Affirmations
+   ========================= */
+
+/* Verses: cleaned to items that include an actual quoted verse in your paste.
+   (You can add more later in the same format.)
+*/
+const VERSES = [
   { ref: "Genesis 15:1", text: "Do not be afraid, Abram. I am your shield." },
   { ref: "Genesis 21:17", text: "Do not be afraid; God has heard the boy crying." },
   { ref: "Genesis 26:24", text: "Do not be afraid, for I am with you." },
@@ -540,6 +1027,1184 @@ const VERSES = [
   { ref: "Revelation 1:17", text: "Do not be afraid. I am the First and the Last." },
 
   /* A few extra “strength/hope/anxiety” items from your paste that included full lines */
+  { ref: "Psalm 56:3", text: "When I am afraid, I put my trust in you." },
+  { ref: "2 Timothy 1:7", text: "For God has not given us a spirit of fear, but of power and of love and of a sound mind." },
+  { ref: "1 Peter 5:7", text: "Cast all your anxiety on him because he cares for you." }
+];
+
+/* Your 365 affirmations (as provided). */
+const AFFIRMATIONS = [
+  "I welcome wisdom into my life.",
+  "I seek understanding instead of confusion.",
+  "I receive instruction that helps me live rightly.",
+  "I honor God as the beginning of all wisdom.",
+  "I am teachable and willing to grow.",
+  "I listen when wisdom calls out to me.",
+  "I turn away from people whose choices lead to harm.",
+  "I protect my peace by avoiding traps set by others.",
+  "I value the counsel of trustworthy voices.",
+  "I do not join in violence, chaos, or foolishness.",
+  "I choose patience and prudence.",
+  "I am alert and not easily deceived.",
+  "I practice discernment in every decision.",
+  "I do not ignore warning signs.",
+  "I listen when God corrects me because it keeps me safe.",
+  "I trust that wisdom increases my days and strengthens my path.",
+  "I refuse to let fear guide my decisions.",
+  "I walk away from conversations that pull me off my purpose.",
+  "I honor the lessons taught by the elders before me.",
+  "I guard my steps carefully.",
+  "I am responsible for the choices I make.",
+  "I ask God for clarity when I feel lost.",
+  "I am not tempted by shortcuts or false promises.",
+  "I value peace over popularity.",
+  "I allow wisdom to protect me from danger.",
+  "I am steady, grounded, and secure.",
+  "I do not entertain the voices of the wicked.",
+  "I listen for God’s direction every day.",
+  "I learn from my mistakes and move forward.",
+  "I seek the knowledge that leads to life.",
+  "I stay mindful of the paths I choose.",
+  "I trust that God answers when I call.",
+  "I rest in the safety that comes from living wisely.",
+  "I receive God’s wisdom with an open heart.",
+  "I treasure understanding because it protects me.",
+  "I listen closely for wisdom and insight.",
+  "I seek God’s knowledge the way others seek treasure.",
+  "I understand what is right, just, and fair.",
+  "I walk on paths of righteousness and safety.",
+  "I am protected from people who twist truth or deceive.",
+  "I stay away from choices that lead to darkness or harm.",
+  "I use discretion to guard my steps.",
+  "I stay grounded so I am not pulled into destructive situations.",
+  "I walk in integrity and remain rooted in God’s wisdom.",
+  "I trust in the Lord with all my heart.",
+  "I do not lean on my own understanding.",
+  "I acknowledge God in all my ways, and He guides my path.",
+  "I choose wisdom over fear and confusion.",
+  "I turn away from evil so my body and mind can heal.",
+  "I honor God with what I have and what I earn.",
+  "I am not wise in my own eyes — I am teachable.",
+  "I welcome correction that protects my future.",
+  "I seek wisdom because she brings peace, joy, and long life.",
+  "I guard kindness and truth so they never leave me.",
+  "I keep sound judgment so my steps stay secure.",
+  "I rest in the safety God provides at night and in the daytime.",
+  "I hold on to wisdom because it is life to me.",
+  "I guard my heart because it directs everything I do.",
+  "I stay on the path God has set for me.",
+  "I do not abandon the lessons that protect my future.",
+  "I turn away from evil and anything that pulls me off my path.",
+  "I walk in light, not in confusion or darkness.",
+  "I stay teachable and open to correction.",
+  "I keep my eyes straight ahead and focused on purpose.",
+  "I choose words that bring life and clarity.",
+  "I stay steady and intentional with every step I take.",
+  "I listen closely to wisdom so I can stay protected.",
+  "I am alert to voices and situations that seem sweet but lead to harm.",
+  "I honor my body, my mind, and my future with disciplined choices.",
+  "I turn away from anything that drains my strength or peace.",
+  "I stay far from paths that pull me into regret.",
+  "I value the life and purpose God has given me.",
+  "I refuse to give my energy, time, or joy to destructive people.",
+  "I protect my personal boundaries with confidence.",
+  "I choose actions that support long-term stability and wholeness.",
+  "I walk in wisdom today so I do not look back in sorrow tomorrow.",
+  "I protect myself by making wise agreements and commitments.",
+  "I do not rush into obligations that trap my peace.",
+  "I take responsibility for fixing mistakes quickly.",
+  "I work diligently and prepare for the future.",
+  "I avoid laziness because my purpose needs my attention.",
+  "I stay away from people who stir up conflict or disorder.",
+  "I recognize warning signs and adjust before harm happens.",
+  "I refuse to engage in deceit, manipulation, or destructive behavior.",
+  "I walk with integrity because it brings peace and protection.",
+  "I honor the wisdom passed down from my parents and elders.",
+  "I resist temptation that leads to regret or loss.",
+  "I guard my heart, my body, and my future with God’s wisdom.",
+  "I keep God’s commands close to my heart.",
+  "I protect myself by storing wisdom deep within me.",
+  "I stay alert to voices and situations that try to pull me off my purpose.",
+  "I recognize temptation early and turn away quickly.",
+  "I do not go near places or people that threaten my peace.",
+  "I choose discipline over impulsive decisions.",
+  "I value long-term stability more than momentary pleasure.",
+  "I guard my steps so I don’t wander into danger.",
+  "I use discernment in relationships and connections.",
+  "I let wisdom guide my emotions, thoughts, and actions.",
+  "I stay grounded in truth so I am not led astray.",
+  "I listen when wisdom calls because her voice leads me to life.",
+  "I choose understanding over confusion and chaos.",
+  "I speak truth and reject anything that twists or distorts it.",
+  "I walk in righteousness and fairness.",
+  "I value wisdom more than gold, silver, or anything money can buy.",
+  "I use good judgment in all my decisions.",
+  "I stay aware of the paths that lead to peace.",
+  "I am protected because I love and pursue wisdom.",
+  "I receive instruction that brings honor and stability.",
+  "I stay in alignment with God’s ways, which lead to life.",
+  "I embrace the blessings that come from choosing wisdom daily.",
+  "I find favor with the Lord by listening and obeying His wisdom.",
+  "I accept wisdom’s invitation because it leads to life.",
+  "I walk in understanding, not confusion.",
+  "I welcome correction because it makes me wiser.",
+  "I surround myself with people who value truth.",
+  "I turn away from foolishness that steals my peace.",
+  "I choose the path that leads to growth and stability.",
+  "I fear the Lord, and that gives me wisdom and direction.",
+  "I build my life on choices that bring honor, clarity, and long life.",
+  "I walk in righteousness, and it brings me stability.",
+  "I speak words that give life, not harm.",
+  "I work diligently and trust that God blesses my efforts.",
+  "I choose wisdom over reckless behavior.",
+  "I guard my mouth because my words carry power.",
+  "I act with integrity even when no one is watching.",
+  "I bring joy to others through my choices and my character.",
+  "I avoid foolishness because it steals peace and creates turmoil.",
+  "I live in the safety and peace that wisdom provides.",
+  "I walk in integrity, and integrity protects me.",
+  "I choose honesty, even when it’s hard.",
+  "Humility opens the door for wisdom in my life.",
+  "My words carry power, and I use them to build, not destroy.",
+  "I release pride and make room for clarity.",
+  "I surround myself with wise voices and safe guidance.",
+  "I am trustworthy, and people can rely on my word.",
+  "I guard my heart by guarding my speech.",
+  "My kindness returns to me multiplied.",
+  "I do not carry other people’s chaos or debts.",
+  "I set boundaries that protect my peace and purpose.",
+  "I sow good seeds and I receive good in return.",
+  "I am guided by truth, not by fear or pressure.",
+  "Peace grows in my life when I act with integrity.",
+  "I release negative cycles that no longer serve me.",
+  "I attract favor when I seek what is good.",
+  "I am steady, grounded, and anchored in wisdom.",
+  "I choose generosity over scarcity.",
+  "I let go of gossip, drama, and confusion.",
+  "My honest choices create a safe and stable future.",
+  "I am protected from the traps set by others.",
+  "I am not shaken by wickedness or negativity.",
+  "I use my influence to uplift and strengthen.",
+  "I stay rooted in what is right, even when others are not.",
+  "I trust that consequences work themselves out without my involvement.",
+  "I walk confidently because my heart is aligned with truth.",
+  "I am free from foolish decisions and reckless promises.",
+  "I practice self-control in my reactions and responses.",
+  "I am a light of integrity in every environment I enter.",
+  "I choose what leads to life, peace, and stability every single day.",
+  "I love discipline because it helps me grow wiser.",
+  "I practice integrity because it strengthens my foundation.",
+  "I choose truth and reject anything deceitful.",
+  "I use my words to heal, uplift, and bring clarity.",
+  "I work diligently and honor the gifts God placed in me.",
+  "I guard my heart from anxious thoughts by seeking wisdom.",
+  "I act righteously, knowing it brings favor and stability.",
+  "I stay grounded and calm because God establishes my steps.",
+  "I pursue wisdom that leads to a peaceful, secure life.",
+  "I receive discipline because it protects my future.",
+  "I walk with wise people so I can grow wiser.",
+  "I guard my words because they shape my life.",
+  "I choose steady, honest work over shortcuts and regret.",
+  "I manage my anger so it doesn’t control my decisions.",
+  "I honor my responsibilities and see the blessings of consistency.",
+  "I pursue wisdom because it leads to life and abundance.",
+  "I stay grounded and patient, trusting that good results come with time.",
+  "I build my life with wisdom, not impulsive decisions.",
+  "I stay calm and patient because a peaceful spirit brings clarity.",
+  "I choose understanding over quick reactions.",
+  "I walk uprightly, and God strengthens my steps.",
+  "I turn away from foolishness that leads to trouble.",
+  "I am slow to anger because anger clouds judgment.",
+  "I show kindness because it honors God and protects my heart.",
+  "I stay grounded and steady even when others choose chaos.",
+  "I choose righteousness because it leads to life, stability, and honor.",
+  "I use gentle words that calm and restore, not words that stir anger.",
+  "I seek knowledge before responding.",
+  "I keep my heart open to correction because it helps me grow.",
+  "I live with integrity, knowing God sees my intentions.",
+  "I choose a cheerful heart that brings life to my spirit.",
+  "I avoid pride because humility brings understanding.",
+  "I listen to wise counsel instead of reacting impulsively.",
+  "I stay slow to anger because it leads to peace and clarity.",
+  "I walk in righteousness, which brings joy and favor.",
+  "I choose paths that lead to peace, wisdom, and stability.",
+  "I commit my plans to the Lord, and He establishes my steps.",
+  "I keep my motives pure and honest before God.",
+  "I stay humble because humility brings wisdom and honor.",
+  "I turn away from evil because righteousness protects my life.",
+  "I choose peaceful responses instead of angry reactions.",
+  "I speak with grace and truth, knowing my words carry weight.",
+  "I rely on God’s guidance, not my own understanding.",
+  "I make decisions that reflect integrity and sound judgment.",
+  "I stay patient because God works everything together in His time.",
+  "I pursue wisdom because it is better than wealth.",
+  "I guard my spirit so pride does not lead me into destruction.",
+  "I walk confidently because the Lord directs my steps.",
+  "I choose peace over conflict, even when others choose chaos.",
+  "I stay calm because wisdom grows in stillness.",
+  "I guard my words so they bring clarity and not harm.",
+  "I walk in integrity, which strengthens my life and reputation.",
+  "I am slow to anger because patience protects my spirit.",
+  "I turn away from foolishness and stay grounded in understanding.",
+  "I show love and loyalty because they reflect God’s heart.",
+  "I protect my peace by avoiding unnecessary arguments.",
+  "I listen before responding so I can speak with wisdom.",
+  "I use discernment to stay away from harmful people and situations.",
+  "I keep my heart steady and wise in every season.",
+  "I seek understanding before I speak.",
+  "I guard my words because they carry power and consequence.",
+  "I avoid gossip and conversations that bring division.",
+  "I run to the Lord as my strong tower and place of safety.",
+  "I stay humble because pride leads to destruction.",
+  "I listen carefully so I can answer wisely.",
+  "I choose friends who strengthen my spirit and character.",
+  "I stay patient and avoid reacting out of impulse.",
+  "I speak life, healing, and truth into every situation.",
+  "I use discernment to stay grounded and wise.",
+  "I remain aware that my tongue can build up or tear down — I choose to build.",
+  "I walk in integrity because it protects my life and my name.",
+  "I stay patient because rushing leads to mistakes and regret.",
+  "I choose wisdom over impulsive decisions.",
+  "I receive correction because it guides me toward growth.",
+  "I avoid anger because calm thinking brings clarity.",
+  "I show kindness because the Lord blesses those who care for the poor.",
+  "I use discernment so I won’t be misled.",
+  "I honor God’s plans, knowing they stand firm over my life.",
+  "I am not swayed by false words or careless talk.",
+  "I keep learning so wisdom can guide my path.",
+  "I choose steady, thoughtful living that leads to peace.",
+  "I practice self-control because it strengthens my wisdom and stability.",
+  "I avoid impulsive decisions that lead to regret.",
+  "I walk in integrity, and my integrity guides my steps.",
+  "I listen carefully before responding so my words reflect wisdom.",
+  "I stay away from unnecessary conflict and choose peace.",
+  "I am diligent because steady effort leads to reward.",
+  "I act with honesty and fairness in all my dealings.",
+  "I seek counsel because wise guidance strengthens my decisions.",
+  "I trust the Lord to search my heart and keep me on the right path.",
+  "I remain calm and patient in stressful situations.",
+  "I value righteousness because it brings protection and clarity.",
+  "I trust that the Lord directs my heart and guides my steps.",
+  "I value righteousness and justice because they please God.",
+  "I examine my motives to keep them pure and honorable.",
+  "I choose diligence over excuses because steady effort brings results.",
+  "I guard my mouth so my words create peace, not strife.",
+  "I avoid rushing into conflict because wisdom stays calm.",
+  "I walk humbly, knowing pride leads to downfall.",
+  "I seek wisdom instead of relying on my own strength.",
+  "I stay focused on what leads to life, peace, and stability.",
+  "I honor God with my decisions and my daily actions.",
+  "I trust that true victory comes from the Lord.",
+  "I protect my good name because it is more valuable than riches.",
+  "I walk in humility because humility brings honor and life.",
+  "I choose wise paths and avoid traps that harm my future.",
+  "I train my heart in wisdom so I will not depart from it.",
+  "I stay away from angry, hot-tempered people to protect my peace.",
+  "I handle my finances with honesty and fairness.",
+  "I speak truth and refuse to twist my words to deceive.",
+  "I am diligent in my work because diligence leads to opportunity.",
+  "I defend the vulnerable and honor those God cares for.",
+  "I maintain healthy boundaries to guard my well-being.",
+  "I seek knowledge and instruction so I can walk securely.",
+  "I use wisdom when making choices, especially around temptation.",
+  "I stay aware of influences that try to pull me off my path.",
+  "I guard my heart from envy and comparison.",
+  "I discipline myself because discipline brings freedom.",
+  "I honor the guidance of wise voices in my life.",
+  "I keep my mind clear and avoid anything that clouds my judgment.",
+  "I stay grounded so cravings and impulses don’t control me.",
+  "I focus on what builds my future instead of draining my strength.",
+  "I align my heart with truth, not deception or distraction.",
+  "I invest in wisdom because it brings long-term peace.",
+  "I walk in self-control because it leads to life and stability.",
+  "I do not envy the wicked or desire their paths.",
+  "I build my life with wisdom, understanding, and knowledge.",
+  "I stay strong in adversity because God is my strength.",
+  "I choose wise counsel before making decisions.",
+  "I refuse to participate in evil or injustice.",
+  "I remain calm and steady when facing trouble.",
+  "I stand up for those who cannot defend themselves.",
+  "I keep my heart from discouragement because my hope is in God.",
+  "I learn from correction so I can grow wiser.",
+  "I stay disciplined and avoid wasting my energy.",
+  "I walk in righteousness because it leads to a secure future.",
+  "I use patience because patience brings clarity and peace.",
+  "I choose gentle words that cool anger and open understanding.",
+  "I avoid unnecessary conflict and stay focused on purpose.",
+  "I stay humble because humility brings honor.",
+  "I act with self-control even when my emotions are strong.",
+  "I guard my heart from impulsive reactions.",
+  "I seek wisdom before making important decisions.",
+  "I show kindness generously and without expectation.",
+  "I remain calm in heated situations because calmness is strength.",
+  "I carry myself with dignity and discipline in every environment.",
+  "I maintain healthy boundaries to protect my peace.",
+  "I stay away from foolish behavior that brings unnecessary trouble.",
+  "I refuse to get pulled into arguments that go nowhere.",
+  "I guard my words and choose truth over exaggeration or deceit.",
+  "I stay focused on my purpose instead of distractions.",
+  "I avoid people who stir up chaos and confusion.",
+  "I protect my peace by stepping away from toxic conversations.",
+  "I practice self-control because it strengthens my character.",
+  "I recognize manipulation and do not fall into its traps.",
+  "I choose honesty, clarity, and integrity in all situations.",
+  "I stay grounded and steady, even when others choose foolishness.",
+  "I do not boast about tomorrow; I stay present and grounded in today.",
+  "I welcome honest feedback because it sharpens my character.",
+  "I choose friendships that challenge me to grow wiser and stronger.",
+  "I manage my emotions with wisdom instead of reacting impulsively.",
+  "I guard my heart from envy and comparison.",
+  "I avoid unnecessary conflict and choose peace whenever possible.",
+  "I stay diligent in my responsibilities because diligence brings stability.",
+  "I value loyalty and faithfulness in my relationships.",
+  "I keep my heart aligned with wisdom to avoid foolish decisions.",
+  "I remain steady and trustworthy in all seasons of life.",
+  "I walk in boldness because righteousness makes me confident.",
+  "I refuse to hide from truth — I face it with courage.",
+  "I choose honesty over gain that comes from wrongdoing.",
+  "I stay faithful because faithfulness brings blessings.",
+  "I avoid impulsive decisions and seek wisdom first.",
+  "I do not let fear or anxiety drive my choices.",
+  "I walk in justice and protect those who are vulnerable.",
+  "I confess mistakes quickly so healing and direction can come.",
+  "I trust that God will supply what I need when I live uprightly.",
+  "I stay grounded in wisdom so I won’t be shaken.",
+  "I receive correction with humility because it protects my future.",
+  "I stay calm and self-controlled even when others lose their tempers.",
+  "I refuse to be controlled by fear, anger, or impulse.",
+  "I listen before speaking so my words bring wisdom and peace.",
+  "I walk in justice because it brings stability to my life.",
+  "I avoid people who stir up conflict or encourage chaos.",
+  "I guard my heart from pride because pride leads to downfall.",
+  "I choose integrity in all things, even when no one is watching.",
+  "I trust that following God’s wisdom brings joy and safety.",
+  "I stay steady, grounded, and wise in every situation.",
+  "I stay humble and acknowledge my need for God’s wisdom.",
+  "I protect my words and avoid speaking without understanding.",
+  "I trust in God’s truth because His Word never fails.",
+  "I refuse falsehood and deceit in any form.",
+  "I ask God for what I truly need, not for excess that harms me.",
+  "I remain content with the portion God gives me.",
+  "I use discernment to recognize patterns of foolishness.",
+  "I walk away from prideful or arrogant behavior.",
+  "I stay alert to the lessons hidden in everyday life.",
+  "I choose wisdom because it strengthens and stabilizes me.",
+  "I speak with wisdom, and kindness flows from my words.",
+  "I rise each day with purpose, strength, and dignity.",
+  "I manage my responsibilities with clarity and intention.",
+  "I make decisions that bring honor to my life and those connected to me.",
+  "I stay disciplined because discipline strengthens my future.",
+  "I am clothed in strength, not fear or uncertainty.",
+  "I protect my household and my heart with wisdom.",
+  "I steward my time, energy, and resources responsibly.",
+  "I walk in confidence because God equips me for every season.",
+  "I live in a way that reflects grace, purpose, and resilience."
+];
+
+/* =========================
+   STORAGE MODEL
+   =========================
+   - Daily entries are keyed by YYYY-MM-DD
+   - Goals are stored globally with createdOn + completedOn (or null).
+     A goal "rolls over" because it remains visible until completed.
+*/
+const STORE_KEY = "wellness_app_v1_white_design";
+
+function loadStore(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return {
+      days: {},                 // { "YYYY-MM-DD": { journal:"", checkins:[...], verseOffset:0, affirmOffset:0 } }
+      goals: [],                // [{id,text,createdOn,completedOn}]
+      appts: [],                // [{id,title,when,where,notes,createdAt}]
+      followups: [],            // [{id,name,notes,createdAt}]
+      ui: { lastTab:"Daily" }
+    };
+    const obj = JSON.parse(raw);
+    return obj && typeof obj === "object" ? obj : loadStore();
+  }catch(e){
+    return {
+      days:{}, goals:[], appts:[], followups:[], ui:{ lastTab:"Daily" }
+    };
+  }
+}
+function saveStore(store){
+  localStorage.setItem(STORE_KEY, JSON.stringify(store));
+}
+
+/* =========================
+   HELPERS
+   ========================= */
+const $ = (id)=>document.getElementById(id);
+
+function pad2(n){ return String(n).padStart(2,"0"); }
+function toDayKey(d){
+  const y = d.getFullYear();
+  const m = pad2(d.getMonth()+1);
+  const day = pad2(d.getDate());
+  return `${y}-${m}-${day}`;
+}
+function dayOfYear(d){
+  const start = new Date(d.getFullYear(),0,0);
+  const diff = d - start;
+  const oneDay = 1000*60*60*24;
+  return Math.floor(diff/oneDay); // 1..366
+}
+function uid(){
+  return Math.random().toString(16).slice(2) + "-" + Date.now().toString(16);
+}
+function escapeHtml(s){
+  return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function setSavedStatus(msg){
+  $("saveStatus").innerHTML = msg;
+  clearTimeout(setSavedStatus._t);
+  setSavedStatus._t = setTimeout(()=>{
+    $("saveStatus").innerHTML = "<b>Saved.</b> You can close and come back anytime.";
+  }, 1800);
+}
+async function copyText(t){
+  try{
+    await navigator.clipboard.writeText(t);
+    setSavedStatus("<b>Copied.</b> Saved stays the same.");
+  }catch(e){
+    // fallback
+    const ta = document.createElement("textarea");
+    ta.value = t;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+    setSavedStatus("<b>Copied.</b> Saved stays the same.");
+  }
+}
+
+/* =========================
+   APP STATE
+   ========================= */
+let store = loadStore();
+let currentDate = new Date();
+let currentKey = toDayKey(currentDate);
+let reviewKey = currentKey;
+
+function ensureDay(key){
+  if(!store.days[key]){
+    store.days[key] = { journal:"", checkins:[], verseOffset:0, affirmOffset:0 };
+  }
+  return store.days[key];
+}
+
+function renderClock(){
+  const d = new Date();
+  const opts = { weekday:"short", year:"numeric", month:"short", day:"2-digit" };
+  const dateStr = d.toLocaleDateString(undefined, opts);
+  const timeStr = d.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit", second:"2-digit" });
+  $("nowPill").textContent = `${dateStr} • ${timeStr}`;
+}
+
+function setDayKey(newKey){
+  currentKey = newKey;
+  $("dayKeyPill").textContent = `Day: ${currentKey}`;
+}
+
+function getDailyVerseIndex(key){
+  const d = new Date(key+"T00:00:00");
+  const base = dayOfYear(d) - 1; // 0-based
+  const day = ensureDay(key);
+  const offset = Number(day.verseOffset||0);
+  return (base + offset + VERSES.length) % VERSES.length;
+}
+function getDailyAffirmIndex(key){
+  const d = new Date(key+"T00:00:00");
+  const base = dayOfYear(d) - 1;
+  const day = ensureDay(key);
+  const offset = Number(day.affirmOffset||0);
+  return (base + offset + AFFIRMATIONS.length) % AFFIRMATIONS.length;
+}
+
+function renderDailyVerse(){
+  const idx = getDailyVerseIndex(currentKey);
+  const v = VERSES[idx];
+  $("verseRef").textContent = `${v.ref}  (${idx+1}/${VERSES.length})`;
+  $("verseText").textContent = v.text;
+}
+function renderDailyAffirm(){
+  const idx = getDailyAffirmIndex(currentKey);
+  $("affirmDay").textContent = `Affirmation (Day-of-year)  (${idx+1}/${AFFIRMATIONS.length})`;
+  $("affirmText").textContent = AFFIRMATIONS[idx] || "—";
+}
+
+function renderJournal(){
+  const day = ensureDay(currentKey);
+  $("journal").value = day.journal || "";
+}
+
+/* Goals: always show incomplete first, then completed */
+function renderGoals(){
+  const list = $("goalsList");
+  list.innerHTML = "";
+  const goals = [...store.goals].sort((a,b)=>{
+    const ac = a.completedOn ? 1 : 0;
+    const bc = b.completedOn ? 1 : 0;
+    if(ac !== bc) return ac - bc;
+    return (a.createdOn||"").localeCompare(b.createdOn||"");
+  });
+
+  $("goalsEmpty").classList.toggle("hidden", goals.length>0);
+
+  for(const g of goals){
+    const done = !!g.completedOn;
+    const el = document.createElement("div");
+    el.className = "item";
+    el.innerHTML = `
+      <div class="itemtop">
+        <div class="itemleft">
+          <input type="checkbox" ${done ? "checked" : ""} data-goalcheck="${g.id}" aria-label="Complete goal" />
+          <div style="flex:1;">
+            <div style="font-weight:700; line-height:1.25;">${escapeHtml(g.text)}</div>
+            <div class="meta">
+              Created: <span class="mono">${escapeHtml(g.createdOn)}</span>
+              ${done ? ` • Completed: <span class="mono">${escapeHtml(g.completedOn)}</span>` : " • Not completed yet (rolls over)"}
+            </div>
+          </div>
+        </div>
+        <button class="btn small danger" type="button" data-goaldel="${g.id}">Delete</button>
+      </div>
+    `;
+    list.appendChild(el);
+  }
+
+  // wire up checkboxes + delete buttons
+  list.querySelectorAll("[data-goalcheck]").forEach(cb=>{
+    cb.addEventListener("change",(e)=>{
+      const id = e.target.getAttribute("data-goalcheck");
+      const goal = store.goals.find(x=>x.id===id);
+      if(!goal) return;
+      goal.completedOn = e.target.checked ? toDayKey(new Date()) : null;
+      saveStore(store);
+      renderGoals();
+      setSavedStatus("<b>Saved.</b> Goal updated.");
+    });
+  });
+  list.querySelectorAll("[data-goaldel]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const id = btn.getAttribute("data-goaldel");
+      store.goals = store.goals.filter(x=>x.id!==id);
+      saveStore(store);
+      renderGoals();
+      setSavedStatus("<b>Saved.</b> Goal deleted.");
+    });
+  });
+}
+
+/* Ratings UI */
+function buildRating(containerId, onSelect){
+  const c = $(containerId);
+  c.innerHTML = "";
+  for(let i=0;i<=10;i++){
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "ratebtn";
+    b.textContent = i;
+    b.setAttribute("data-v", String(i));
+    b.addEventListener("click", ()=>{
+      onSelect(i);
+      // highlight
+      [...c.querySelectorAll(".ratebtn")].forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+    });
+    c.appendChild(b);
+  }
+  return {
+    setActive(v){
+      [...c.querySelectorAll(".ratebtn")].forEach(x=>{
+        x.classList.toggle("active", Number(x.getAttribute("data-v"))===Number(v));
+      });
+    },
+    clear(){
+      [...c.querySelectorAll(".ratebtn")].forEach(x=>x.classList.remove("active"));
+    }
+  };
+}
+
+let depPick = null;
+let anxPick = null;
+let depUI, anxUI;
+
+function renderCheckins(){
+  const day = ensureDay(currentKey);
+  const list = $("checkinsList");
+  list.innerHTML = "";
+  const arr = day.checkins || [];
+  $("checkinsEmpty").classList.toggle("hidden", arr.length>0);
+
+  arr.slice().reverse().forEach((c, idxFromEnd)=>{
+    const idx = arr.length - 1 - idxFromEnd;
+    const el = document.createElement("div");
+    el.className = "item";
+    el.innerHTML = `
+      <div class="itemtop">
+        <div style="flex:1;">
+          <div style="font-weight:800;">
+            Depression: ${escapeHtml(String(c.dep))} • Anxiety: ${escapeHtml(String(c.anx))}
+          </div>
+          <div class="meta">
+            Time: <span class="mono">${escapeHtml(c.time)}</span>
+            ${c.reason ? ` • Note: ${escapeHtml(c.reason)}` : ""}
+          </div>
+        </div>
+        <button class="btn small danger" type="button" data-checkdel="${idx}">Delete</button>
+      </div>
+    `;
+    list.appendChild(el);
+  });
+
+  list.querySelectorAll("[data-checkdel]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const i = Number(btn.getAttribute("data-checkdel"));
+      const d = ensureDay(currentKey);
+      d.checkins.splice(i,1);
+      saveStore(store);
+      renderCheckins();
+      setSavedStatus("<b>Saved.</b> Check-in deleted.");
+    });
+  });
+}
+
+/* Appointments + Follow-ups */
+function renderAppts(){
+  const list = $("apptsList");
+  list.innerHTML = "";
+  const appts = [...store.appts].sort((a,b)=> (a.when||"").localeCompare(b.when||""));
+  $("apptsEmpty").classList.toggle("hidden", appts.length>0);
+
+  for(const a of appts){
+    const el = document.createElement("div");
+    el.className = "item";
+    const whenNice = a.when ? new Date(a.when).toLocaleString() : "—";
+    el.innerHTML = `
+      <div class="itemtop">
+        <div style="flex:1;">
+          <div style="font-weight:800;">${escapeHtml(a.title||"(untitled)")}</div>
+          <div class="meta">When: <span class="mono">${escapeHtml(whenNice)}</span></div>
+          ${a.where ? `<div class="meta">Where: ${escapeHtml(a.where)}</div>` : ""}
+          ${a.notes ? `<div class="meta">Notes: ${escapeHtml(a.notes)}</div>` : ""}
+        </div>
+        <button class="btn small danger" type="button" data-apptdel="${a.id}">Delete</button>
+      </div>
+    `;
+    list.appendChild(el);
+  }
+
+  list.querySelectorAll("[data-apptdel]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const id = btn.getAttribute("data-apptdel");
+      store.appts = store.appts.filter(x=>x.id!==id);
+      saveStore(store);
+      renderAppts();
+      setSavedStatus("<b>Saved.</b> Appointment deleted.");
+    });
+  });
+}
+
+function renderFUs(){
+  const list = $("fuList");
+  list.innerHTML = "";
+  const fus = [...store.followups].sort((a,b)=> (b.createdAt||"").localeCompare(a.createdAt||""));
+  $("fuEmpty").classList.toggle("hidden", fus.length>0);
+
+  for(const f of fus){
+    const el = document.createElement("div");
+    el.className = "item";
+    el.innerHTML = `
+      <div class="itemtop">
+        <div style="flex:1;">
+          <div style="font-weight:800;">${escapeHtml(f.name||"(no name)")}</div>
+          <div class="meta">Added: <span class="mono">${escapeHtml(f.createdAt)}</span></div>
+          ${f.notes ? `<div class="meta">Notes: ${escapeHtml(f.notes)}</div>` : ""}
+        </div>
+        <button class="btn small danger" type="button" data-fudel="${f.id}">Delete</button>
+      </div>
+    `;
+    list.appendChild(el);
+  }
+
+  list.querySelectorAll("[data-fudel]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const id = btn.getAttribute("data-fudel");
+      store.followups = store.followups.filter(x=>x.id!==id);
+      saveStore(store);
+      renderFUs();
+      setSavedStatus("<b>Saved.</b> Follow-up deleted.");
+    });
+  });
+}
+
+/* Review page */
+function renderReview(){
+  const day = ensureDay(reviewKey);
+  $("reviewDayKey").textContent = `Loaded day: ${reviewKey}`;
+  $("reviewJournal").textContent = day.journal ? day.journal : "—";
+
+  // goals show global
+  const gWrap = $("reviewGoals");
+  gWrap.innerHTML = "";
+  const goals = [...store.goals].sort((a,b)=>{
+    const ac = a.completedOn ? 1 : 0;
+    const bc = b.completedOn ? 1 : 0;
+    if(ac !== bc) return ac - bc;
+    return (a.createdOn||"").localeCompare(b.createdOn||"");
+  });
+  if(goals.length===0){
+    gWrap.innerHTML = `<div class="hint">No goals saved.</div>`;
+  }else{
+    for(const g of goals){
+      const el = document.createElement("div");
+      el.className="item";
+      el.innerHTML = `
+        <div style="font-weight:800;">${escapeHtml(g.text)}</div>
+        <div class="meta">
+          Created: <span class="mono">${escapeHtml(g.createdOn)}</span>
+          ${g.completedOn ? ` • Completed: <span class="mono">${escapeHtml(g.completedOn)}</span>` : " • Not completed yet"}
+        </div>
+      `;
+      gWrap.appendChild(el);
+    }
+  }
+
+  // checkins for that day
+  const cWrap = $("reviewCheckins");
+  cWrap.innerHTML = "";
+  const arr = day.checkins || [];
+  if(arr.length===0){
+    cWrap.innerHTML = `<div class="hint">No check-ins saved for this day.</div>`;
+  }else{
+    for(const c of arr){
+      const el = document.createElement("div");
+      el.className="item";
+      el.innerHTML = `
+        <div style="font-weight:800;">Depression: ${escapeHtml(String(c.dep))} • Anxiety: ${escapeHtml(String(c.anx))}</div>
+        <div class="meta">Time: <span class="mono">${escapeHtml(c.time)}</span>${c.reason ? ` • Note: ${escapeHtml(c.reason)}` : ""}</div>
+      `;
+      cWrap.appendChild(el);
+    }
+  }
+}
+
+/* =========================
+   TAB NAV
+   ========================= */
+function setTab(name){
+  const tabs = [
+    {name:"Daily", btn:$("tabDaily"), view:$("viewDaily")},
+    {name:"Review", btn:$("tabReview"), view:$("viewReview")},
+    {name:"Appts", btn:$("tabAppts"), view:$("viewAppts")},
+    {name:"Backup", btn:$("tabBackup"), view:$("viewBackup")}
+  ];
+  tabs.forEach(t=>{
+    const on = (t.name===name);
+    t.btn.classList.toggle("active", on);
+    t.view.classList.toggle("hidden", !on);
+  });
+  store.ui.lastTab = name;
+  saveStore(store);
+}
+
+$("tabDaily").addEventListener("click",()=>setTab("Daily"));
+$("tabReview").addEventListener("click",()=>setTab("Review"));
+$("tabAppts").addEventListener("click",()=>setTab("Appts"));
+$("tabBackup").addEventListener("click",()=>setTab("Backup"));
+
+/* =========================
+   EVENTS: Daily Verse + Affirmation
+   ========================= */
+$("prevVerse").addEventListener("click",()=>{
+  const day = ensureDay(currentKey);
+  day.verseOffset = (Number(day.verseOffset||0) - 1);
+  saveStore(store);
+  renderDailyVerse();
+  setSavedStatus("<b>Saved.</b> Verse changed.");
+});
+$("nextVerse").addEventListener("click",()=>{
+  const day = ensureDay(currentKey);
+  day.verseOffset = (Number(day.verseOffset||0) + 1);
+  saveStore(store);
+  renderDailyVerse();
+  setSavedStatus("<b>Saved.</b> Verse changed.");
+});
+$("copyVerse").addEventListener("click",()=>{
+  const idx = getDailyVerseIndex(currentKey);
+  const v = VERSES[idx];
+  copyText(`${v.ref} — ${v.text}`);
+});
+
+$("prevAffirm").addEventListener("click",()=>{
+  const day = ensureDay(currentKey);
+  day.affirmOffset = (Number(day.affirmOffset||0) - 1);
+  saveStore(store);
+  renderDailyAffirm();
+  setSavedStatus("<b>Saved.</b> Affirmation changed.");
+});
+$("nextAffirm").addEventListener("click",()=>{
+  const day = ensureDay(currentKey);
+  day.affirmOffset = (Number(day.affirmOffset||0) + 1);
+  saveStore(store);
+  renderDailyAffirm();
+  setSavedStatus("<b>Saved.</b> Affirmation changed.");
+});
+$("copyAffirm").addEventListener("click",()=>{
+  const idx = getDailyAffirmIndex(currentKey);
+  copyText(AFFIRMATIONS[idx] || "");
+});
+
+/* =========================
+   Journal
+   ========================= */
+$("journal").addEventListener("input", ()=>{
+  const day = ensureDay(currentKey);
+  day.journal = $("journal").value;
+  saveStore(store); // autosave
+  setSavedStatus("<b>Saved.</b> Journal updated.");
+});
+$("copyJournal").addEventListener("click",()=>{
+  copyText($("journal").value || "");
+});
+$("clearJournal").addEventListener("click",()=>{
+  const ok = confirm("Clear today’s journal text? (This only clears the journal box for this date.)");
+  if(!ok) return;
+  const day = ensureDay(currentKey);
+  day.journal = "";
+  $("journal").value = "";
+  saveStore(store);
+  setSavedStatus("<b>Saved.</b> Journal cleared.");
+});
+
+/* =========================
+   Goals
+   ========================= */
+$("addGoal").addEventListener("click", ()=>{
+  const t = $("newGoal").value.trim();
+  if(!t){
+    alert("Type a goal first.");
+    return;
+  }
+  store.goals.push({ id: uid(), text: t, createdOn: currentKey, completedOn: null });
+  $("newGoal").value = "";
+  saveStore(store);
+  renderGoals();
+  setSavedStatus("<b>Saved.</b> Goal added.");
+});
+$("clearCompletedGoals").addEventListener("click", ()=>{
+  const ok = confirm("Remove completed goals from the list? (This deletes them.)");
+  if(!ok) return;
+  store.goals = store.goals.filter(g=>!g.completedOn);
+  saveStore(store);
+  renderGoals();
+  setSavedStatus("<b>Saved.</b> Completed goals removed.");
+});
+
+/* =========================
+   Check-ins
+   ========================= */
+$("addCheckin").addEventListener("click", ()=>{
+  if(depPick===null || anxPick===null){
+    alert("Pick both Depression and Anxiety (1–10) before adding a check-in.");
+    return;
+  }
+  const reason = $("moodReason").value.trim();
+  const now = new Date();
+  const time = now.toLocaleTimeString(undefined, {hour:"2-digit", minute:"2-digit"});
+  const day = ensureDay(currentKey);
+  day.checkins.push({ dep: depPick, anx: anxPick, reason, time });
+  $("moodReason").value = "";
+  depPick = null; anxPick = null;
+  depUI.clear(); anxUI.clear();
+  saveStore(store);
+  renderCheckins();
+  setSavedStatus("<b>Saved.</b> Check-in added.");
+});
+$("clearTodayCheckins").addEventListener("click", ()=>{
+  const ok = confirm("Clear today’s check-ins? (This deletes them for this date.)");
+  if(!ok) return;
+  const day = ensureDay(currentKey);
+  day.checkins = [];
+  saveStore(store);
+  renderCheckins();
+  setSavedStatus("<b>Saved.</b> Today’s check-ins cleared.");
+});
+
+/* =========================
+   Appointments + Follow-ups
+   ========================= */
+$("addAppt").addEventListener("click", ()=>{
+  const title = $("apptTitle").value.trim();
+  const when = $("apptWhen").value;
+  const where = $("apptWhere").value.trim();
+  const notes = $("apptNotes").value.trim();
+
+  if(!title && !when && !where && !notes){
+    alert("Add at least a title or a date/time.");
+    return;
+  }
+  store.appts.push({ id: uid(), title, when, where, notes, createdAt: new Date().toISOString() });
+  saveStore(store);
+  renderAppts();
+  setSavedStatus("<b>Saved.</b> Appointment added.");
+});
+$("clearApptForm").addEventListener("click", ()=>{
+  $("apptTitle").value = "";
+  $("apptWhen").value = "";
+  $("apptWhere").value = "";
+  $("apptNotes").value = "";
+});
+
+$("addFU").addEventListener("click", ()=>{
+  const name = $("fuName").value.trim();
+  const notes = $("fuNotes").value.trim();
+  if(!name && !notes){
+    alert("Add at least a name or notes.");
+    return;
+  }
+  store.followups.push({ id: uid(), name, notes, createdAt: new Date().toLocaleString() });
+  saveStore(store);
+  renderFUs();
+  setSavedStatus("<b>Saved.</b> Follow-up added.");
+});
+$("clearFUForm").addEventListener("click", ()=>{
+  $("fuName").value = "";
+  $("fuNotes").value = "";
+});
+
+/* =========================
+   Review / History
+   ========================= */
+$("loadPickedDate").addEventListener("click", ()=>{
+  const val = $("pickDate").value;
+  if(!val){
+    alert("Pick a date first.");
+    return;
+  }
+  reviewKey = val;
+  ensureDay(reviewKey);
+  renderReview();
+});
+$("loadToday").addEventListener("click", ()=>{
+  reviewKey = currentKey;
+  renderReview();
+});
+
+/* =========================
+   Backup
+   ========================= */
+function openModal(title, html){
+  $("modalTitle").textContent = title;
+  $("modalBody").innerHTML = html;
+  $("modalBack").style.display = "flex";
+  $("modalBack").setAttribute("aria-hidden","false");
+}
+function closeModal(){
+  $("modalBack").style.display = "none";
+  $("modalBack").setAttribute("aria-hidden","true");
+}
+$("closeModal").addEventListener("click", closeModal);
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="Escape") closeModal();
+});
+
+$("exportBtn").addEventListener("click", ()=>{
+  const data = JSON.stringify(store, null, 2);
+  // download as file
+  const blob = new Blob([data], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `wellness-backup-${currentKey}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  setSavedStatus("<b>Exported.</b> Backup file downloaded.");
+});
+
+$("importFile").addEventListener("change", async (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  try{
+    const txt = await file.text();
+    const obj = JSON.parse(txt);
+    if(!obj || typeof obj !== "object") throw new Error("Invalid JSON");
+    // shallow validate
+    if(!("days" in obj) || !("goals" in obj)) throw new Error("Missing fields");
+    store = obj;
+    saveStore(store);
+    // refresh
+    ensureDay(currentKey);
+    renderAll();
+    setSavedStatus("<b>Imported.</b> Data loaded.");
+    alert("Import complete.");
+  }catch(err){
+    alert("Import failed: " + (err && err.message ? err.message : "Unknown error"));
+  }finally{
+    e.target.value = "";
+  }
+});
+
+$("resetAll").addEventListener("click", ()=>{
+  const ok = confirm("Reset ALL data? This cannot be undone.");
+  if(!ok) return;
+  localStorage.removeItem(STORE_KEY);
+  store = loadStore();
+  ensureDay(currentKey);
+  renderAll();
+  setSavedStatus("<b>Reset complete.</b> All data cleared.");
+});
+
+/* =========================
+   Save button
+   ========================= */
+$("saveAll").addEventListener("click", ()=>{
+  // All critical actions already save automatically, but this forces a save and confirms it.
+  saveStore(store);
+  setSavedStatus("<b>Saved.</b> Everything is stored on this device.");
+});
+
+/* =========================
+   INIT
+   ========================= */
+function renderAll(){
+  setDayKey(currentKey);
+
+  renderDailyVerse();
+  renderDailyAffirm();
+  renderJournal();
+  renderGoals();
+  renderCheckins();
+  renderAppts();
+  renderFUs();
+
+  // review init
+  $("pickDate").value = currentKey;
+  reviewKey = currentKey;
+  renderReview();
+
+  // restore tab
+  const t = store.ui && store.ui.lastTab ? store.ui.lastTab : "Daily";
+  setTab(t);
+}
+
+(function init(){
+  // clock
+  renderClock();
+  setInterval(renderClock, 1000);
+
+  // rating UIs
+  depUI = buildRating("depRating", (v)=>{ depPick = v; });
+  anxUI = buildRating("anxRating", (v)=>{ anxPick = v; });
+
+  ensureDay(currentKey);
+  renderAll();
+})();
+</script>
+</body>
+</html>
+const BIBLE_VERSES = [
+  { ref: "Exodus 14:14", text: "The Lord will fight for you; you need only to be still." },
+  { ref: "Numbers 6:24-26", text: "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you." },
+  { ref: "Deuteronomy 31:6", text: "Be strong and courageous. Do not be afraid or terrified, for the Lord your God goes with you." },
+  { ref: "Joshua 1:9", text: "Have I not commanded you? Be strong and courageous... for the Lord your God will be with you." },
+  { ref: "1 Chronicles 16:11", text: "Look to the Lord and his strength; seek his face always." },
+  { ref: "Nehemiah 8:10", text: "Do not grieve, for the joy of the Lord is your strength." },
+  { ref: "Psalm 4:8", text: "In peace I will lie down and sleep, for you alone, Lord, make me dwell in safety." },
+  { ref: "Psalm 9:9", text: "The Lord is a refuge for the oppressed, a stronghold in times of trouble." },
+  { ref: "Psalm 16:8", text: "I keep my eyes always on the Lord. With him at my right hand, I will not be shaken." },
+  { ref: "Psalm 18:2", text: "The Lord is my rock, my fortress and my deliverer; my God is my rock, in whom I take refuge." },
+  { ref: "Psalm 19:14", text: "May these words of my mouth and this meditation of my heart be pleasing in your sight, Lord." },
+  { ref: "Psalm 28:7", text: "The Lord is my strength and my shield; my heart trusts in him, and he helps me." },
+  { ref: "Psalm 30:5", text: "Weeping may stay for the night, but rejoicing comes in the morning." },
+  { ref: "Psalm 32:7", text: "You are my hiding place; you will protect me from trouble and surround me with songs of deliverance." },
+  { ref: "Psalm 34:10", text: "Those who seek the Lord lack no good thing." },
+  { ref: "Psalm 37:4", text: "Take delight in the Lord, and he will give you the desires of your heart." },
+  { ref: "Psalm 37:5", text: "Commit your way to the Lord; trust in him and he will do this." },
+  { ref: "Psalm 37:23-24", text: "The Lord makes firm the steps of the one who delights in him." },
+  { ref: "Psalm 40:1", text: "I waited patiently for the Lord; he turned to me and heard my cry." },
+  { ref: "Psalm 42:11", text: "Why, my soul, are you downcast? Put your hope in God, for I will yet praise him." },
+  { ref: "Psalm 61:2", text: "From the ends of the earth I call to you, I call as my heart grows faint; lead me to the rock that is higher than I." },
+  { ref: "Psalm 62:1", text: "Truly my soul finds rest in God; my salvation comes from him." },
+  { ref: "Psalm 63:3", text: "Because your love is better than life, my lips will glorify you." },
+  { ref: "Psalm 73:26", text: "My flesh and my heart may fail, but God is the strength of my heart and my portion forever." },
+  { ref: "Psalm 84:11", text: "For the Lord God is a sun and shield; the Lord bestows favor and honor." },
+  { ref: "Psalm 91:1", text: "Whoever dwells in the shelter of the Most High will rest in the shadow of the Almighty." },
+  { ref: "Psalm 91:4", text: "He will cover you with his feathers, and under his wings you will find refuge." },
+  { ref: "Psalm 100:5", text: "For the Lord is good and his love endures forever; his faithfulness continues through all generations." },
+  { ref: "Psalm 103:1-2", text: "Praise the Lord, my soul; all my inmost being, praise his holy name." },
+  { ref: "Psalm 107:1", text: "Give thanks to the Lord, for he is good; his love endures forever." },
+  { ref: "Psalm 119:105", text: "Your word is a lamp for my feet, a light on my path." },
+  { ref: "Psalm 119:114", text: "You are my refuge and my shield; I have put my hope in your word." },
+  { ref: "Psalm 130:5", text: "I wait for the Lord, my whole being waits, and in his word I put my hope." },
+  { ref: "Psalm 138:3", text: "When I called, you answered me; you greatly emboldened me." },
+  { ref: "Psalm 139:14", text: "I praise you because I am fearfully and wonderfully made; your works are wonderful." },
+  { ref: "Psalm 143:8", text: "Let the morning bring me word of your unfailing love, for I have put my trust in you." },
+  { ref: "Psalm 145:18", text: "The Lord is near to all who call on them, to all who call on them in truth." },
+  { ref: "Psalm 147:3", text: "He heals the brokenhearted and binds up their wounds." },
+  { ref: "Proverbs 4:23", text: "Above all else, guard your heart, for everything you do flows from it." },
+  { ref: "Proverbs 14:30", text: "A heart at peace gives life to the body." },
+  { ref: "Proverbs 16:3", text: "Commit to the Lord whatever you do, and he will establish your plans." },
+  { ref: "Proverbs 16:24", text: "Gracious words are a honeycomb, sweet to the soul and healing to the bones." },
+  { ref: "Proverbs 18:24", text: "There is a friend who sticks closer than a brother." },
+  { ref: "Isaiah 30:15", text: "In repentance and rest is your salvation, in quietness and trust is your strength." },
+  { ref: "Genesis 15:1", text: "Do not be afraid, Abram. I am your shield." },
+  { ref: "Genesis 21:17", text: "Do not be afraid; God has heard the boy crying." },
+  { ref: "Genesis 26:24", text: "Do not be afraid, for I am with you." },
+  { ref: "Genesis 43:23", text: "It’s all right... Don’t be afraid." },
+  { ref: "Genesis 46:3", text: "Do not be afraid to go down to Egypt." },
+  { ref: "Exodus 14:13", text: "Do not be afraid. Stand firm and you will see the deliverance." },
+  { ref: "Exodus 20:20", text: "Do not be afraid. God has come to test you." },
+  { ref: "Numbers 21:34", text: "Do not be afraid of him, for I have delivered him into your hands." },
+  { ref: "Deuteronomy 1:21", text: "Do not be afraid; do not be discouraged." },
+  { ref: "Deuteronomy 3:2", text: "Do not be afraid of him." },
+  { ref: "Deuteronomy 3:22", text: "Do not be afraid of them; the Lord your God himself will fight for you." },
+  { ref: "Deuteronomy 31:6", text: "Be strong and courageous. Do not be afraid." },
+  { ref: "Deuteronomy 31:8", text: "He will never leave you nor forsake you. Do not be afraid." },
+  { ref: "Joshua 8:1", text: "Do not be afraid; do not be discouraged." },
+  { ref: "Joshua 10:8", text: "Do not be afraid of them; I have given them into your hand." },
+  { ref: "Joshua 10:25", text: "Do not be afraid; do not be discouraged. Be strong and courageous." },
+  { ref: "Judges 6:23", text: "Peace! Do not be afraid. You are not going to die." },
+  { ref: "Ruth 3:11", text: "And now, my daughter, don’t be afraid." },
+  { ref: "1 Samuel 12:20", text: "Do not be afraid... You have done all this evil." },
+  { ref: "2 Samuel 9:7", text: "Don’t be afraid," },
+  { ref: "1 Kings 17:13", text: "Don’t be afraid. Go home and do as you have said." },
+  { ref: "2 Kings 6:16", text: "Don’t be afraid... Those who are with us are more." },
+  { ref: "2 Kings 19:6", text: "Do not be afraid of what you have heard." },
+  { ref: "1 Chronicles 28:20", text: "Do not be afraid or discouraged, for the Lord God... is with you." },
+  { ref: "2 Chronicles 20:17", text: "Do not be afraid; do not be discouraged." },
+  { ref: "Psalm 49:16", text: "Do not be overawed when others grow rich." },
+  { ref: "Isaiah 7:4", text: "Be careful, keep calm and don’t be afraid. Do not lose heart." },
+  { ref: "Isaiah 35:4", text: "Be strong, do not fear." },
+  { ref: "Isaiah 41:10", text: "So do not fear, for I am with you." },
+  { ref: "Isaiah 41:13", text: "I am the Lord your God... Do not fear." },
+  { ref: "Isaiah 43:1", text: "Do not fear, for I have redeemed you." },
+  { ref: "Isaiah 43:5", text: "Do not be afraid, for I am with you." },
+  { ref: "Isaiah 54:4", text: "Do not be afraid; you will not be put to shame." },
+  { ref: "Jeremiah 1:8", text: "Do not be afraid of them, for I am with you." },
+  { ref: "Daniel 10:12", text: "Do not be afraid, Daniel." },
+  { ref: "Daniel 10:19", text: "Do not be afraid... Peace!" },
+  { ref: "Joel 2:21", text: "Do not be afraid... be glad and rejoice." },
+  { ref: "Zephaniah 3:16", text: "Do not fear." },
+  { ref: "Haggai 2:5", text: "My Spirit remains among you. Do not fear." },
+  { ref: "Zechariah 8:13", text: "Do not be afraid, but let your hands be strong." },
+  { ref: "Matthew 1:20", text: "Do not be afraid to take Mary home." },
+  { ref: "Matthew 10:28", text: "Do not be afraid of those who kill the body." },
+  { ref: "Matthew 28:5", text: "Do not be afraid." },
+  { ref: "Luke 1:13", text: "Do not be afraid, Zechariah." },
+  { ref: "Luke 1:30", text: "Do not be afraid, Mary." },
+  { ref: "Luke 2:10", text: "Do not be afraid. I bring you good news." },
+  { ref: "Luke 5:10", text: "Don’t be afraid; from now on you will fish for people." },
+  { ref: "Luke 8:50", text: "Don’t be afraid; just believe." },
+  { ref: "Luke 12:7", text: "Don’t be afraid; you are worth more than many sparrows." },
+  { ref: "Luke 12:32", text: "Do not be afraid, little flock." },
+  { ref: "John 12:15", text: "Do not be afraid, Daughter Zion." },
+  { ref: "Acts 27:24", text: "Do not be afraid, Paul." },
+  { ref: "Revelation 1:17", text: "Do not be afraid. I am the First and the Last." },
   { ref: "Psalm 56:3", text: "When I am afraid, I put my trust in you." },
   { ref: "2 Timothy 1:7", text: "For God has not given us a spirit of fear, but of power and of love and of a sound mind." },
   { ref: "1 Peter 5:7", text: "Cast all your anxiety on him because he cares for you." }
