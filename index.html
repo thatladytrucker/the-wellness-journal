@@ -974,6 +974,24 @@ function uid(){
 function escapeHtml(s){
   return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+function calculateStreak() {
+  const keys = Object.keys(store.days).sort().reverse();
+  let streak = 0;
+  let checkDate = new Date();
+
+  while (true) {
+    const key = toDayKey(checkDate);
+    const day = store.days[key];
+    // Does this day have a journal entry OR at least one check-in?
+    if (day && (day.journal.trim().length > 0 || day.checkins.length > 0)) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
 function setSavedStatus(msg){
   $("saveStatus").innerHTML = msg;
   clearTimeout(setSavedStatus._t);
