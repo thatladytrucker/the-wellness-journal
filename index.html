@@ -1124,6 +1124,7 @@ function buildRating(containerId, onSelect){
     b.type = "button";
     b.className = "ratebtn";
     b.textContent = i;
+    b.setAttribute("aria-label", "Rate " + i);
     b.setAttribute("data-v", String(i));
     b.addEventListener("click", ()=>{
       onSelect(i);
