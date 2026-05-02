@@ -1608,7 +1608,15 @@ function renderAll(){
 (function init(){
   // clock
   renderClock();
-  setInterval(renderClock, 1000);
+setInterval(() => {
+  renderClock();
+  const nowKey = toDayKey(new Date());
+  if (nowKey !== currentKey) {
+    currentKey = nowKey;
+    ensureDay(currentKey);
+    renderAll();
+  }
+}, 1000);  
 
   // rating UIs
   depUI = buildRating("depRating", (v)=>{ depPick = v; });
